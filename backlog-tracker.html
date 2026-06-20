@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backlog Tracker</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iOCIgeTE9IjYiIHgyPSI1NiIgeTI9IjU4IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNkQ1RUY4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjM0I4MkY2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjUyIiBoZWlnaHQ9IjUyIiByeD0iMTYiIGZpbGw9InVybCgjZykiLz48cmVjdCB4PSIxOCIgeT0iMTYiIHdpZHRoPSIyOCIgaGVpZ2h0PSIzNCIgcng9IjYiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuOTgiLz48cmVjdCB4PSIyMiIgeT0iMjIiIHdpZHRoPSIxNiIgaGVpZ2h0PSIzLjUiIHJ4PSIxLjc1IiBmaWxsPSIjQzdEMkZFIi8+PHJlY3QgeD0iMjIiIHk9IjI5IiB3aWR0aD0iMjAiIGhlaWdodD0iMy41IiByeD0iMS43NSIgZmlsbD0iI0M3RDJGRSIvPjxyZWN0IHg9IjIyIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMuNSIgcng9IjEuNzUiIGZpbGw9IiNDN0QyRkUiLz48cGF0aCBkPSJNMzcuNSA0MS41IDMxLjggMzUuOWEyLjQgMi40IDAgMCAwLTMuNCAzLjRsNy40IDcuM2EyLjQgMi40IDAgMCAwIDMuNCAwbDEzLTEyLjhhMi40IDIuNCAwIDEgMC0zLjQtMy40eiIgZmlsbD0iIzEwQjk4MSIvPjwvc3ZnPg==">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iOCIgeTE9IjYiIHgyPSI1NiIgeTI9IjU4IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNkQ1RUY4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjM0I4MkY2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjUyIiBoZWlnaHQ9IjUyIiByeD0iMTYiIGZpbGw9InVybCgjZykiLz48cmVjdCB4PSIxOCIgeT0iMTYiIHdpZHRoPSIyOCIgaGVpZ2h0PSIzNCIgcng9IjYiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuOTgiLz48cmVjdCB4PSIyMiIgeT0iMjIiIHdpZHRoPSIxNiIgaGVpZ2h0PSIzLjUiIHJ4PSIxLjc1IiBmaWxsPSIjQzdEMkZFIi8+PHJlY3QgeD0iMjIiIHk9IjI5IiB3aWR0aD0iMjAiIGhlaWdodD0iMy41IiByeD0iMS43NSIgZmlsbD0iI0M3RDJGRSIvPjxyZWN0IHg9IjIyIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMuNSIgcng9IjEuNzUiIGZpbGw9IiNDN0QyRkUiLz48cGF0aCBkPSJNMzcuNSA0MS41IDMxLjggMzUuOWEyLjQgMi40IDAgMCAwLTMuNCAzLjRsNy40IDcuM2EyLjQgMi40IDAgMCAwIDMuNCAwbDEzLTEyLjhhMi40IDIuNCAwIDEgMC0zLjQtMy40eiIgZmlsbD0iIzEwQjk4MSIvPjwvc3ZnPg==">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#4f46e5" />
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef2ff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #dbe3f0;
+      --primary: #4f46e5;
+      --primary-soft: #e0e7ff;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --success: #16a34a;
+      --success-soft: #dcfce7;
+      --warning: #d97706;
+      --warning-soft: #fef3c7;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+    [data-theme="dark"] {
+      --bg: #0b1220;
+      --surface: #111827;
+      --surface-2: #172033;
+      --text: #f3f4f6;
+      --muted: #94a3b8;
+      --border: #243043;
+      --primary: #8b9bff;
+      --primary-soft: #1f2950;
+      --danger: #f87171;
+      --danger-soft: #3a1820;
+      --success: #4ade80;
+      --success-soft: #10281b;
+      --warning: #fbbf24;
+      --warning-soft: #3a2f10;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 85%, black 15%));
+      color: var(--text);
+    }
+    .app {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    .topbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .brand h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); }
+    .brand p { margin: 6px 0 0; color: var(--muted); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .layout {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .panel-pad { padding: 18px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      min-height: 118px;
+    }
+    .stat small { color: var(--muted); display: block; margin-bottom: 10px; }
+    .stat strong { font-size: 1.9rem; display: block; }
+    .progress-bar {
+      height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-top: 10px;
+    }
+    .progress-bar span { display: block; height: 100%; background: var(--primary); width: 0%; }
+    .toolbar, .filters {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, .8fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    input, textarea, select, button {
+      font: inherit;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 12px 14px;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    button {
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: transparent;
+    }
+    .btn-soft { background: var(--surface-2); }
+    .btn-danger { background: var(--danger); color: white; border-color: transparent; }
+    button:hover { transform: translateY(-1px); }
+    .list { display: grid; gap: 12px; }
+    .item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--surface) 92%, var(--surface-2) 8%);
+    }
+    .item h3 { margin: 0 0 6px; font-size: 1rem; }
+    .meta, .desc, .mini { color: var(--muted); font-size: .92rem; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .tag {
+      font-size: .82rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .priority-High { background: var(--danger-soft); color: var(--danger); }
+    .priority-Medium { background: var(--warning-soft); color: var(--warning); }
+    .priority-Low { background: var(--success-soft); color: var(--success); }
+    .status-Completed { background: var(--success-soft); color: var(--success); }
+    .status-Pending { background: var(--primary-soft); color: var(--primary); }
+    .status-In\ Progress { background: var(--warning-soft); color: var(--warning); }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+    .day-name, .day {
+      text-align: center;
+      padding: 10px 6px;
+      border-radius: 14px;
+    }
+    .day-name { color: var(--muted); font-weight: 600; font-size: .9rem; }
+    .day {
+      min-height: 82px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .day.muted { opacity: .35; }
+    .day.today { outline: 2px solid var(--primary); }
+    .dots { display: flex; gap: 4px; flex-wrap: wrap; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .full { grid-column: 1 / -1; }
+    .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      user-select: none;
+      cursor: pointer;
+    }
+    .chip.active { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .section-title h2 { margin: 0; font-size: 1.1rem; }
+    .empty { color: var(--muted); padding: 24px 0; text-align: center; }
+    .footer-note { color: var(--muted); font-size: .9rem; margin-top: 10px; }
+    .stack { display: grid; gap: 18px; }
+    .inline-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+    .small { padding: 8px 10px; font-size: .9rem; }
+    .hidden { display: none; }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .stats, .report-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .stats, .toolbar, .filters, .form-grid, .report-grid { grid-template-columns: 1fr; }
+      .app { padding: 14px 12px 28px; }
+      .day { min-height: 70px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Backlog Tracker</h1>
+        <p>Track pending work, assignments, bills, and deadlines in one place.</p>
+      </div>
+      <div class="actions">
+        <button id="themeToggle" class="btn-soft">Toggle theme</button>
+        <button id="backupBtn" class="btn-soft">Export backup</button>
+        <label class="btn-soft" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:12px 14px;border-radius:14px;border:1px solid var(--border);">
+          Import backup
+          <input id="importFile" type="file" accept="application/json" class="hidden" />
+        </label>
+      </div>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <div class="layout">
+      <main class="stack">
+        <section class="panel panel-pad">
+          <div class="section-title">
+            <h2>Backlog list</h2>
+            <div class="inline-buttons">
+              <button id="notifyBtn" class="btn-soft small">Enable reminders</button>
+              <button id="dailySummaryBtn" class="btn-soft small">Daily summary</button>
+              <button id="weeklyReportBtn" class="btn-soft small">Weekly report</button>
+            </div>
+          </div>
+          <div class="toolbar">
+            <input id="searchInput" placeholder="Search by title" />
+            <select id="categoryFilter"><option value="">All categories</option><option>Study</option><option>Work</option><option>Personal</option><option>Bills</option><option>Other</option></select>
+            <select id="priorityFilter"><option value="">All priorities</option><option>Low</option><option>Medium</option><option>High</option></select>
+            <select id="statusFilter"><option value="">All statuses</option><option>Pending</option><option>In Progress</option><option>Completed</option></select>
+          </div>
+          <div id="backlogList" class="list"></div>
+        </section>
+
+        <section class="panel panel-pad">
+          <div class="section-title">
+            <h2>Calendar view</h2>
+            <div class="inline-buttons">
+              <button id="prevMonth" class="btn-soft small">Previous</button>
+              <button id="nextMonth" class="btn-soft small">Next</button>
+            </div>
+          </div>
+          <div class="mini" id="calendarLabel" style="margin-bottom:12px;"></div>
+          <div class="calendar-grid" id="calendar"></div>
+          <p class="footer-note">Red dots show overdue items, green shows completed, blue shows active upcoming items.</p>
+        </section>
+      </main>
+
+      <aside class="stack">
+        <section class="panel panel-pad">
+          <div class="section-title"><h2 id="formTitle">Add backlog</h2></div>
+          <form id="backlogForm" class="form-grid">
+            <input class="full" id="title" placeholder="Title" required />
+            <textarea class="full" id="description" placeholder="Description"></textarea>
+            <select id="category" required><option>Study</option><option>Work</option><option>Personal</option><option>Bills</option><option>Other</option></select>
+            <select id="priority" required><option>Low</option><option selected>Medium</option><option>High</option></select>
+            <input id="dueDate" type="date" required />
+            <input id="dueTime" type="time" required />
+            <div class="full">
+              <div class="mini" style="margin-bottom:8px;">Reminder timings</div>
+              <div class="chip-row" id="reminderChips"></div>
+            </div>
+            <div class="full inline-buttons">
+              <button class="btn-primary" type="submit">Save backlog</button>
+              <button class="btn-soft" id="resetFormBtn" type="button">Reset</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel panel-pad">
+          <div class="section-title"><h2>Reports</h2></div>
+          <div id="reports" class="report-grid"></div>
+        </section>
+
+        <section class="panel panel-pad">
+          <div class="section-title"><h2>Widget preview</h2></div>
+          <div id="widgetPreview"></div>
+          <p class="footer-note">This website version simulates a mobile home-screen widget with your nearest due tasks.</p>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'backlog-tracker-web-data-v1';
+    const THEME_KEY = 'backlog-tracker-theme';
+    const REMINDER_OPTIONS = [7, 3, 1, 0];
+    let editingId = null;
+    let calendarDate = new Date();
+    let notificationPermissionAsked = false;
+
+    const elements = {
+      stats: document.getElementById('stats'),
+      reports: document.getElementById('reports'),
+      backlogList: document.getElementById('backlogList'),
+      widgetPreview: document.getElementById('widgetPreview'),
+      form: document.getElementById('backlogForm'),
+      formTitle: document.getElementById('formTitle'),
+      search: document.getElementById('searchInput'),
+      categoryFilter: document.getElementById('categoryFilter'),
+      priorityFilter: document.getElementById('priorityFilter'),
+      statusFilter: document.getElementById('statusFilter'),
+      reminderChips: document.getElementById('reminderChips'),
+      themeToggle: document.getElementById('themeToggle'),
+      backupBtn: document.getElementById('backupBtn'),
+      importFile: document.getElementById('importFile'),
+      calendar: document.getElementById('calendar'),
+      calendarLabel: document.getElementById('calendarLabel'),
+      prevMonth: document.getElementById('prevMonth'),
+      nextMonth: document.getElementById('nextMonth'),
+      notifyBtn: document.getElementById('notifyBtn'),
+      dailySummaryBtn: document.getElementById('dailySummaryBtn'),
+      weeklyReportBtn: document.getElementById('weeklyReportBtn'),
+      resetFormBtn: document.getElementById('resetFormBtn')
+    };
+
+    const defaultState = { items: [], search: '', filters: { category: '', priority: '', status: '' } };
+    let state = loadState();
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(defaultState);
+      } catch {
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem(THEME_KEY, theme);
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved) return setTheme(saved);
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+
+    function formatDateTime(iso) {
+      return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
+    }
+
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    }
+
+    function itemStatusTone(item) {
+      if (item.status === 'Completed') return 'Completed';
+      if (new Date(item.dueAt) < new Date()) return 'Overdue';
+      return item.status;
+    }
+
+    function getFilteredItems() {
+      const q = state.search.toLowerCase().trim();
+      return state.items.filter(item => {
+        const titleOk = item.title.toLowerCase().includes(q);
+        const categoryOk = !state.filters.category || item.category === state.filters.category;
+        const priorityOk = !state.filters.priority || item.priority === state.filters.priority;
+        const statusOk = !state.filters.status || item.status === state.filters.status;
+        return titleOk && categoryOk && priorityOk && statusOk;
+      }).sort((a, b) => new Date(a.dueAt) - new Date(b.dueAt));
+    }
+
+    function getMetrics() {
+      const now = new Date();
+      const total = state.items.length;
+      const overdue = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) < now).length;
+      const upcoming = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) >= now && new Date(i.dueAt) <= new Date(now.getTime() + 7 * 86400000)).length;
+      const completed = state.items.filter(i => i.status === 'Completed').length;
+      return { total, overdue, upcoming, completed, progress: total ? Math.round((completed / total) * 100) : 0 };
+    }
+
+    function renderStats() {
+      const { total, overdue, upcoming, progress } = getMetrics();
+      elements.stats.innerHTML = `
+        <div class="stat"><small>Total backlogs</small><strong>${total}</strong><div class="mini">All tracked items</div></div>
+        <div class="stat"><small>Overdue</small><strong>${overdue}</strong><div class="mini">Past due and incomplete</div></div>
+        <div class="stat"><small>Due in 7 days</small><strong>${upcoming}</strong><div class="mini">Upcoming deadlines</div></div>
+        <div class="stat"><small>Completion progress</small><strong>${progress}%</strong><div class="progress-bar"><span style="width:${progress}%"></span></div></div>
+      `;
+    }
+
+    function renderList() {
+      const items = getFilteredItems();
+      if (!items.length) {
+        elements.backlogList.innerHTML = '<div class="empty">No backlog items match your current filters.</div>';
+        return;
+      }
+      elements.backlogList.innerHTML = items.map(item => {
+        const overdue = item.status !== 'Completed' && new Date(item.dueAt) < new Date();
+        return `
+          <article class="item">
+            <div>
+              <h3>${escapeHtml(item.title)}</h3>
+              <div class="meta">${escapeHtml(item.category)} • Due ${formatDateTime(item.dueAt)}</div>
+              <p class="desc">${escapeHtml(item.description || 'No description added.')}</p>
+              <div class="tags">
+                <span class="tag priority-${item.priority}">${item.priority} priority</span>
+                <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
+                ${overdue ? '<span class="tag priority-High">Overdue</span>' : ''}
+              </div>
+            </div>
+            <div class="inline-buttons">
+              <button class="btn-soft small" onclick="editItem('${item.id}')">Edit</button>
+              <button class="btn-soft small" onclick="cycleStatus('${item.id}')">Status</button>
+              <button class="btn-danger small" onclick="deleteItem('${item.id}')">Delete</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderReports() {
+      const { total, completed, overdue, upcoming } = getMetrics();
+      const pending = state.items.filter(i => i.status === 'Pending').length;
+      const inProgress = state.items.filter(i => i.status === 'In Progress').length;
+      elements.reports.innerHTML = `
+        <div class="stat"><small>Completed vs pending</small><strong>${completed} / ${pending}</strong><div class="mini">Finished vs waiting</div></div>
+        <div class="stat"><small>Upcoming deadlines</small><strong>${upcoming}</strong><div class="mini">Within the next 7 days</div></div>
+        <div class="stat"><small>Productivity stats</small><strong>${total ? Math.round((completed / total) * 100) : 0}%</strong><div class="mini">${inProgress} in progress • ${overdue} overdue</div></div>
+      `;
+    }
+
+    function renderWidgetPreview() {
+      const items = [...state.items]
+        .filter(i => i.status !== 'Completed')
+        .sort((a, b) => new Date(a.dueAt) - new Date(b.dueAt))
+        .slice(0, 3);
+      if (!items.length) {
+        elements.widgetPreview.innerHTML = '<div class="empty">Upcoming tasks will appear here.</div>';
+        return;
+      }
+      elements.widgetPreview.innerHTML = items.map(item => `<div style="padding:10px 0;border-bottom:1px solid var(--border);"><strong>${escapeHtml(item.title)}</strong><div class="mini">${formatDateTime(item.dueAt)}</div></div>`).join('');
+    }
+
+    function renderReminderChips(selected = [7, 3, 1, 0]) {
+      elements.reminderChips.innerHTML = REMINDER_OPTIONS.map(value => {
+        const label = value === 0 ? 'On due date' : `${value} day${value === 1 ? '' : 's'} before`;
+        return `<button type="button" class="chip ${selected.includes(value) ? 'active' : ''}" data-reminder="${value}">${label}</button>`;
+      }).join('');
+      elements.reminderChips.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => chip.classList.toggle('active'));
+      });
+    }
+
+    function getSelectedReminders() {
+      return [...elements.reminderChips.querySelectorAll('.chip.active')].map(el => Number(el.dataset.reminder)).sort((a, b) => b - a);
+    }
+
+    function renderCalendar() {
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+      elements.calendarLabel.textContent = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(calendarDate);
+      const firstDay = new Date(year, month, 1);
+      const start = new Date(firstDay);
+      start.setDate(1 - ((firstDay.getDay() + 6) % 7));
+      const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const cells = names.map(name => `<div class="day-name">${name}</div>`);
+      for (let i = 0; i < 42; i++) {
+        const day = new Date(start);
+        day.setDate(start.getDate() + i);
+        const dayItems = state.items.filter(item => sameDay(new Date(item.dueAt), day));
+        const dots = dayItems.slice(0, 4).map(item => {
+          const color = item.status === 'Completed' ? 'var(--success)' : new Date(item.dueAt) < new Date() ? 'var(--danger)' : 'var(--primary)';
+          return `<span class="dot" style="background:${color}"></span>`;
+        }).join('');
+        cells.push(`
+          <div class="day ${day.getMonth() !== month ? 'muted' : ''} ${sameDay(day, new Date()) ? 'today' : ''}">
+            <strong>${day.getDate()}</strong>
+            <div class="dots">${dots}</div>
+          </div>
+        `);
+      }
+      elements.calendar.innerHTML = cells.join('');
+    }
+
+    function resetForm() {
+      editingId = null;
+      elements.form.reset();
+      elements.formTitle.textContent = 'Add backlog';
+      const tomorrow = new Date(Date.now() + 86400000);
+      document.getElementById('dueDate').value = tomorrow.toISOString().slice(0, 10);
+      document.getElementById('dueTime').value = '18:00';
+      renderReminderChips([7, 3, 1, 0]);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\'': '&#39;', '"': '&quot;' }[m]));
+    }
+
+    window.editItem = function(id) {
+      const item = state.items.find(x => x.id === id);
+      if (!item) return;
+      editingId = id;
+      elements.formTitle.textContent = 'Edit backlog';
+      document.getElementById('title').value = item.title;
+      document.getElementById('description').value = item.description;
+      document.getElementById('category').value = item.category;
+      document.getElementById('priority').value = item.priority;
+      const dt = new Date(item.dueAt);
+      document.getElementById('dueDate').value = dt.toISOString().slice(0, 10);
+      document.getElementById('dueTime').value = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+      renderReminderChips(item.reminders || [7, 3, 1, 0]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.deleteItem = function(id) {
+      state.items = state.items.filter(item => item.id !== id);
+      saveState();
+      scheduleAllReminders();
+      refresh();
+    }
+
+    window.cycleStatus = function(id) {
+      const order = ['Pending', 'In Progress', 'Completed'];
+      const item = state.items.find(x => x.id === id);
+      if (!item) return;
+      item.status = order[(order.indexOf(item.status) + 1) % order.length];
+      saveState();
+      refresh();
+    }
+
+    function submitForm(event) {
+      event.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const category = document.getElementById('category').value;
+      const priority = document.getElementById('priority').value;
+      const dueDate = document.getElementById('dueDate').value;
+      const dueTime = document.getElementById('dueTime').value;
+      const reminders = getSelectedReminders();
+      if (!title || !dueDate || !dueTime) return;
+      const dueAt = new Date(`${dueDate}T${dueTime}:00`).toISOString();
+      if (editingId) {
+        const item = state.items.find(x => x.id === editingId);
+        Object.assign(item, { title, description, category, priority, dueAt, reminders });
+      } else {
+        state.items.push({
+          id: crypto.randomUUID(),
+          title,
+          description,
+          category,
+          priority,
+          dueAt,
+          status: 'Pending',
+          reminders,
+          createdAt: new Date().toISOString(),
+          notified: []
+        });
+      }
+      saveState();
+      scheduleAllReminders();
+      resetForm();
+      refresh();
+    }
+
+    function refresh() {
+      state.search = elements.search.value || '';
+      state.filters.category = elements.categoryFilter.value;
+      state.filters.priority = elements.priorityFilter.value;
+      state.filters.status = elements.statusFilter.value;
+      saveState();
+      renderStats();
+      renderList();
+      renderReports();
+      renderCalendar();
+      renderWidgetPreview();
+    }
+
+    async function requestNotificationPermission() {
+      if (!('Notification' in window)) {
+        alert('This browser does not support notifications.');
+        return false;
+      }
+      if (Notification.permission === 'granted') return true;
+      if (Notification.permission === 'denied') {
+        alert('Notifications are blocked in your browser settings.');
+        return false;
+      }
+      const permission = await Notification.requestPermission();
+      return permission === 'granted';
+    }
+
+    function showNotification(title, body) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, { body });
+      }
+    }
+
+    function scheduleAllReminders() {
+      state.items.forEach(item => {
+        item.notified = item.notified || [];
+      });
+      saveState();
+    }
+
+    function checkReminders() {
+      const now = new Date();
+      state.items.forEach(item => {
+        if (item.status === 'Completed') return;
+        item.reminders.forEach(offset => {
+          const trigger = new Date(new Date(item.dueAt).getTime() - offset * 86400000);
+          const triggerKey = `${offset}-${new Date(item.dueAt).toISOString()}`;
+          const isDueWindow = now >= trigger && now <= new Date(trigger.getTime() + 15 * 60000);
+          if (isDueWindow && !(item.notified || []).includes(triggerKey) && Notification.permission === 'granted') {
+            const title = offset === 0 ? `Due today: ${item.title}` : `${item.title} due in ${offset} day${offset === 1 ? '' : 's'}`;
+            showNotification(title, `${item.category} • ${item.priority} priority`);
+            item.notified.push(triggerKey);
+          }
+        });
+      });
+      saveState();
+    }
+
+    function showDailySummary() {
+      const now = new Date();
+      const dueToday = state.items.filter(i => i.status !== 'Completed' && sameDay(new Date(i.dueAt), now)).length;
+      const overdue = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) < now).length;
+      alert(`Daily Summary\n\nDue today: ${dueToday}\nOverdue: ${overdue}\nOpen items: ${state.items.filter(i => i.status !== 'Completed').length}`);
+    }
+
+    function showWeeklyReport() {
+      const now = new Date();
+      const weekAhead = new Date(now.getTime() + 7 * 86400000);
+      const upcoming = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) >= now && new Date(i.dueAt) <= weekAhead).length;
+      const completed = state.items.filter(i => i.status === 'Completed').length;
+      alert(`Weekly Progress Report\n\nCompleted items: ${completed}\nUpcoming deadlines: ${upcoming}\nCompletion rate: ${getMetrics().progress}%`);
+    }
+
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'backlog-tracker-backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importBackup(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!parsed.items) throw new Error('Invalid backup file');
+          state = parsed;
+          saveState();
+          resetForm();
+          refresh();
+        } catch {
+          alert('Could not import that backup file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function bindEvents() {
+      elements.form.addEventListener('submit', submitForm);
+      elements.search.addEventListener('input', refresh);
+      elements.categoryFilter.addEventListener('change', refresh);
+      elements.priorityFilter.addEventListener('change', refresh);
+      elements.statusFilter.addEventListener('change', refresh);
+      elements.resetFormBtn.addEventListener('click', resetForm);
+      elements.themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+      elements.backupBtn.addEventListener('click', exportBackup);
+      elements.importFile.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) importBackup(file);
+        e.target.value = '';
+      });
+      elements.prevMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
+      elements.nextMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
+      elements.notifyBtn.addEventListener('click', async () => {
+        const ok = await requestNotificationPermission();
+        notificationPermissionAsked = ok;
+        if (ok) alert('Notifications enabled. Keep this page available in your browser for reminder checks.');
+      });
+      elements.dailySummaryBtn.addEventListener('click', showDailySummary);
+      elements.weeklyReportBtn.addEventListener('click', showWeeklyReport);
+    }
+
+    function seedDemoIfEmpty() {
+      if (state.items.length) return;
+      const now = new Date();
+      state.items = [
+        {
+          id: crypto.randomUUID(),
+          title: 'Submit math assignment',
+          description: 'Finish calculus problems and upload the PDF.',
+          category: 'Study',
+          priority: 'High',
+          dueAt: new Date(now.getTime() + 2 * 86400000).toISOString(),
+          status: 'Pending',
+          reminders: [3, 1, 0],
+          createdAt: now.toISOString(),
+          notified: []
+        },
+        {
+          id: crypto.randomUUID(),
+          title: 'Pay electricity bill',
+          description: 'Pay through net banking before the late fee applies.',
+          category: 'Bills',
+          priority: 'Medium',
+          dueAt: new Date(now.getTime() + 5 * 86400000).toISOString(),
+          status: 'In Progress',
+          reminders: [7, 3, 1, 0],
+          createdAt: now.toISOString(),
+          notified: []
+        },
+        {
+          id: crypto.randomUUID(),
+          title: 'Portfolio redesign',
+          description: 'Prepare the mobile mockup and write the case study.',
+          category: 'Work',
+          priority: 'Low',
+          dueAt: new Date(now.getTime() - 2 * 86400000).toISOString(),
+          status: 'Pending',
+          reminders: [1, 0],
+          createdAt: now.toISOString(),
+          notified: []
+        }
+      ];
+      saveState();
+    }
+
+    initTheme();
+    bindEvents();
+    seedDemoIfEmpty();
+    resetForm();
+    elements.search.value = state.search || '';
+    elements.categoryFilter.value = state.filters.category || '';
+    elements.priorityFilter.value = state.filters.priority || '';
+    elements.statusFilter.value = state.filters.status || '';
+    refresh();
+    setInterval(checkReminders, 60000);
+    checkReminders();
+  </script>
+</body>
+</html>
