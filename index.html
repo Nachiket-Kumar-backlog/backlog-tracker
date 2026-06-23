@@ -208,6 +208,25 @@
     .empty { color: var(--muted); padding: 24px 0; text-align: center; }
     .footer-note { color: var(--muted); font-size: .9rem; margin-top: 10px; }
     .stack { display: grid; gap: 18px; }
+    .section-block { display: grid; gap: 12px; }
+    .section-divider { margin: 6px 0 2px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .section-divider h3 { margin: 0; font-size: 1rem; }
+    .completed-copy { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+    .item.completed { opacity: .78; background: color-mix(in srgb, var(--surface) 86%, var(--success-soft) 14%); }
+    .item.active-edit { outline: 2px solid var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 15%, transparent); }
+    .day { cursor: pointer; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+    .day:hover { transform: translateY(-1px); border-color: var(--primary); }
+    .day.selected { background: color-mix(in srgb, var(--primary-soft) 78%, var(--surface) 22%); border-color: var(--primary); }
+    .day strong { font-size: .95rem; }
+    .day-count { font-size: .75rem; color: var(--muted); }
+    .calendar-layout { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); align-items: start; }
+    .calendar-side { border: 1px solid var(--border); border-radius: 16px; padding: 14px; background: color-mix(in srgb, var(--surface) 90%, var(--surface-2) 10%); min-height: 100%; }
+    .calendar-side h3 { margin: 0 0 6px; font-size: 1rem; }
+    .calendar-task-list { display: grid; gap: 10px; margin-top: 12px; }
+    .calendar-task { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: var(--surface); }
+    .calendar-task h4 { margin: 0 0 6px; font-size: .98rem; }
+    .calendar-task .mini { margin-top: 4px; }
+    .calendar-empty { color: var(--muted); padding: 14px 0 2px; }
     .inline-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
     .small { padding: 8px 10px; font-size: .9rem; }
     .hidden { display: none; }
@@ -270,8 +289,15 @@
             </div>
           </div>
           <div class="mini" id="calendarLabel" style="margin-bottom:12px;"></div>
-          <div class="calendar-grid" id="calendar"></div>
-          <p class="footer-note">Red dots show overdue items, green shows completed, blue shows active upcoming items.</p>
+          <div class="calendar-layout">
+            <div class="calendar-grid" id="calendar"></div>
+            <div class="calendar-side">
+              <h3 id="calendarDetailsTitle">Tasks for selected date</h3>
+              <div class="mini" id="calendarDetailsMeta">Select a date to view scheduled tasks.</div>
+              <div id="calendarDetails" class="calendar-task-list"></div>
+            </div>
+          </div>
+          <p class="footer-note">Red dots show overdue items, green shows completed, blue shows active upcoming items. Tap any date to see full task details.</p>
         </section>
       </main>
 
@@ -316,6 +342,7 @@
     const REMINDER_OPTIONS = [7, 3, 1, 0];
     let editingId = null;
     let calendarDate = new Date();
+    let selectedCalendarDate = new Date();
     let notificationPermissionAsked = false;
 
     const elements = {
@@ -335,6 +362,9 @@
       importFile: document.getElementById('importFile'),
       calendar: document.getElementById('calendar'),
       calendarLabel: document.getElementById('calendarLabel'),
+      calendarDetails: document.getElementById('calendarDetails'),
+      calendarDetailsTitle: document.getElementById('calendarDetailsTitle'),
+      calendarDetailsMeta: document.getElementById('calendarDetailsMeta'),
       prevMonth: document.getElementById('prevMonth'),
       nextMonth: document.getElementById('nextMonth'),
       notifyBtn: document.getElementById('notifyBtn'),
@@ -384,15 +414,33 @@
       return item.status;
     }
 
+    function getStatusRank(status) {
+      return ({ 'Pending': 0, 'In Progress': 1, 'Completed': 2 })[status] ?? 99;
+    }
+
+    function getPriorityRank(priority) {
+      return ({ 'High': 0, 'Medium': 1, 'Low': 2 })[priority] ?? 99;
+    }
+
+    function sortItems(items) {
+      return [...items].sort((a, b) => {
+        const statusDiff = getStatusRank(a.status) - getStatusRank(b.status);
+        if (statusDiff !== 0) return statusDiff;
+        const priorityDiff = getPriorityRank(a.priority) - getPriorityRank(b.priority);
+        if (priorityDiff !== 0) return priorityDiff;
+        return new Date(a.dueAt) - new Date(b.dueAt);
+      });
+    }
+
     function getFilteredItems() {
       const q = state.search.toLowerCase().trim();
-      return state.items.filter(item => {
+      return sortItems(state.items.filter(item => {
         const titleOk = item.title.toLowerCase().includes(q);
         const categoryOk = !state.filters.category || item.category === state.filters.category;
         const priorityOk = !state.filters.priority || item.priority === state.filters.priority;
         const statusOk = !state.filters.status || item.status === state.filters.status;
         return titleOk && categoryOk && priorityOk && statusOk;
-      }).sort((a, b) => new Date(a.dueAt) - new Date(b.dueAt));
+      }));
     }
 
     function getMetrics() {
@@ -414,34 +462,58 @@
       `;
     }
 
+    function renderItemCard(item, completedSection = false) {
+      const overdue = item.status !== 'Completed' && new Date(item.dueAt) < new Date();
+      return `
+        <article class="item ${item.status === 'Completed' ? 'completed' : ''} ${editingId === item.id ? 'active-edit' : ''}">
+          <div>
+            <h3>${escapeHtml(item.title)}</h3>
+            <div class="meta">${escapeHtml(item.category)} • Due ${formatDateTime(item.dueAt)}</div>
+            <p class="desc">${escapeHtml(item.description || 'No description added.')}</p>
+            <div class="tags">
+              <span class="tag priority-${item.priority}">${item.priority} priority</span>
+              <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
+              ${overdue ? '<span class="tag priority-High">Overdue</span>' : ''}
+              ${completedSection ? '<span class="tag status-Completed">Archived below active tasks</span>' : ''}
+            </div>
+          </div>
+          <div class="inline-buttons">
+            <button class="btn-soft small" onclick="editItem('${item.id}')">Edit</button>
+            <button class="btn-soft small" onclick="cycleStatus('${item.id}')">Status</button>
+            <button class="btn-danger small" onclick="deleteItem('${item.id}')">Delete</button>
+          </div>
+        </article>
+      `;
+    }
+
     function renderList() {
       const items = getFilteredItems();
       if (!items.length) {
         elements.backlogList.innerHTML = '<div class="empty">No backlog items match your current filters.</div>';
         return;
       }
-      elements.backlogList.innerHTML = items.map(item => {
-        const overdue = item.status !== 'Completed' && new Date(item.dueAt) < new Date();
-        return `
-          <article class="item">
-            <div>
-              <h3>${escapeHtml(item.title)}</h3>
-              <div class="meta">${escapeHtml(item.category)} • Due ${formatDateTime(item.dueAt)}</div>
-              <p class="desc">${escapeHtml(item.description || 'No description added.')}</p>
-              <div class="tags">
-                <span class="tag priority-${item.priority}">${item.priority} priority</span>
-                <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
-                ${overdue ? '<span class="tag priority-High">Overdue</span>' : ''}
-              </div>
-            </div>
-            <div class="inline-buttons">
-              <button class="btn-soft small" onclick="editItem('${item.id}')">Edit</button>
-              <button class="btn-soft small" onclick="cycleStatus('${item.id}')">Status</button>
-              <button class="btn-danger small" onclick="deleteItem('${item.id}')">Delete</button>
-            </div>
-          </article>
-        `;
-      }).join('');
+
+      const activeItems = items.filter(item => item.status !== 'Completed');
+      const completedItems = items.filter(item => item.status === 'Completed');
+
+      const activeMarkup = activeItems.length
+        ? activeItems.map(item => renderItemCard(item)).join('')
+        : '<div class="empty">No active tasks match your current filters.</div>';
+
+      const completedMarkup = completedItems.length
+        ? `
+          <div class="section-divider">
+            <h3>Completed Tasks</h3>
+            <p class="completed-copy">Finished items stay readable here and remain below all active work.</p>
+          </div>
+          <div class="section-block">${completedItems.map(item => renderItemCard(item, true)).join('')}</div>
+        `
+        : '';
+
+      elements.backlogList.innerHTML = `
+        <div class="section-block">${activeMarkup}</div>
+        ${completedMarkup}
+      `;
     }
 
     function renderReports() {
@@ -456,10 +528,7 @@
     }
 
     function renderWidgetPreview() {
-      const items = [...state.items]
-        .filter(i => i.status !== 'Completed')
-        .sort((a, b) => new Date(a.dueAt) - new Date(b.dueAt))
-        .slice(0, 3);
+      const items = sortItems(state.items.filter(i => i.status !== 'Completed')).slice(0, 3);
       if (!items.length) {
         elements.widgetPreview.innerHTML = '<div class="empty">Upcoming tasks will appear here.</div>';
         return;
@@ -481,9 +550,34 @@
       return [...elements.reminderChips.querySelectorAll('.chip.active')].map(el => Number(el.dataset.reminder)).sort((a, b) => b - a);
     }
 
+    function renderCalendarDetails(day) {
+      const dayItems = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
+      elements.calendarDetailsTitle.textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long' }).format(day);
+      elements.calendarDetailsMeta.textContent = dayItems.length ? `${dayItems.length} task${dayItems.length === 1 ? '' : 's'} scheduled` : 'No tasks scheduled for this date.';
+
+      if (!dayItems.length) {
+        elements.calendarDetails.innerHTML = '<div class="calendar-empty">No tasks planned for the selected date.</div>';
+        return;
+      }
+
+      elements.calendarDetails.innerHTML = dayItems.map(item => `
+        <article class="calendar-task">
+          <h4>${escapeHtml(item.title)}</h4>
+          <div class="tags">
+            <span class="tag priority-${item.priority}">${item.priority}</span>
+            <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
+          </div>
+          <div class="mini">Due: ${formatDateTime(item.dueAt)}</div>
+        </article>
+      `).join('');
+    }
+
     function renderCalendar() {
       const year = calendarDate.getFullYear();
       const month = calendarDate.getMonth();
+      if (selectedCalendarDate.getFullYear() !== year || selectedCalendarDate.getMonth() !== month) {
+        selectedCalendarDate = new Date(year, month, 1);
+      }
       elements.calendarLabel.textContent = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(calendarDate);
       const firstDay = new Date(year, month, 1);
       const start = new Date(firstDay);
@@ -493,19 +587,27 @@
       for (let i = 0; i < 42; i++) {
         const day = new Date(start);
         day.setDate(start.getDate() + i);
-        const dayItems = state.items.filter(item => sameDay(new Date(item.dueAt), day));
+        const dayItems = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
         const dots = dayItems.slice(0, 4).map(item => {
           const color = item.status === 'Completed' ? 'var(--success)' : new Date(item.dueAt) < new Date() ? 'var(--danger)' : 'var(--primary)';
           return `<span class="dot" style="background:${color}"></span>`;
         }).join('');
         cells.push(`
-          <div class="day ${day.getMonth() !== month ? 'muted' : ''} ${sameDay(day, new Date()) ? 'today' : ''}">
+          <button type="button" class="day ${day.getMonth() !== month ? 'muted' : ''} ${sameDay(day, new Date()) ? 'today' : ''} ${sameDay(day, selectedCalendarDate) ? 'selected' : ''}" data-date="${day.toISOString()}">
             <strong>${day.getDate()}</strong>
+            <div class="day-count">${dayItems.length ? `${dayItems.length} task${dayItems.length === 1 ? '' : 's'}` : 'No tasks'}</div>
             <div class="dots">${dots}</div>
-          </div>
+          </button>
         `);
       }
       elements.calendar.innerHTML = cells.join('');
+      elements.calendar.querySelectorAll('.day[data-date]').forEach(button => {
+        button.addEventListener('click', () => {
+          selectedCalendarDate = new Date(button.dataset.date);
+          renderCalendar();
+        });
+      });
+      renderCalendarDetails(selectedCalendarDate);
     }
 
     function resetForm() {
@@ -535,7 +637,9 @@
       document.getElementById('dueDate').value = dt.toISOString().slice(0, 10);
       document.getElementById('dueTime').value = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
       renderReminderChips(item.reminders || [7, 3, 1, 0]);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const formSection = elements.form.closest('section');
+      if (formSection) formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => document.getElementById('title').focus(), 250);
     }
 
     window.deleteItem = function(id) {
@@ -586,6 +690,8 @@
       scheduleAllReminders();
       resetForm();
       refresh();
+      const listSection = document.getElementById('backlogList');
+      if (listSection) listSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function refresh() {
@@ -705,8 +811,8 @@
         if (file) importBackup(file);
         e.target.value = '';
       });
-      elements.prevMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
-      elements.nextMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
+      elements.prevMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); selectedCalendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1); renderCalendar(); });
+      elements.nextMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); selectedCalendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1); renderCalendar(); });
       elements.notifyBtn.addEventListener('click', async () => {
         const ok = await requestNotificationPermission();
         notificationPermissionAsked = ok;
@@ -763,6 +869,7 @@
     initTheme();
     bindEvents();
     seedDemoIfEmpty();
+    selectedCalendarDate = new Date();
     resetForm();
     elements.search.value = state.search || '';
     elements.categoryFilter.value = state.filters.category || '';
