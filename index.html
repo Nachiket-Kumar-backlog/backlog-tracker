@@ -4,463 +4,482 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Backlog Tracker</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iOCIgeTE9IjYiIHgyPSI1NiIgeTI9IjU4IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNkQ1RUY4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjM0I4MkY2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjUyIiBoZWlnaHQ9IjUyIiByeD0iMTYiIGZpbGw9InVybCgjZykiLz48cmVjdCB4PSIxOCIgeT0iMTYiIHdpZHRoPSIyOCIgaGVpZ2h0PSIzNCIgcng9IjYiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuOTgiLz48cmVjdCB4PSIyMiIgeT0iMjIiIHdpZHRoPSIxNiIgaGVpZ2h0PSIzLjUiIHJ4PSIxLjc1IiBmaWxsPSIjQzdEMkZFIi8+PHJlY3QgeD0iMjIiIHk9IjI5IiB3aWR0aD0iMjAiIGhlaWdodD0iMy41IiByeD0iMS43NSIgZmlsbD0iI0M3RDJGRSIvPjxyZWN0IHg9IjIyIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMuNSIgcng9IjEuNzUiIGZpbGw9IiNDN0QyRkUiLz48cGF0aCBkPSJNMzcuNSA0MS41IDMxLjggMzUuOWEyLjQgMi40IDAgMCAwLTMuNCAzLjRsNy40IDcuM2EyLjQgMi40IDAgMCAwIDMuNCAwbDEzLTEyLjhhMi40IDIuNCAwIDEgMC0zLjQtMy40eiIgZmlsbD0iIzEwQjk4MSIvPjwvc3ZnPg==">
-  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iOCIgeTE9IjYiIHgyPSI1NiIgeTI9IjU4IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNkQ1RUY4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjM0I4MkY2Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjUyIiBoZWlnaHQ9IjUyIiByeD0iMTYiIGZpbGw9InVybCgjZykiLz48cmVjdCB4PSIxOCIgeT0iMTYiIHdpZHRoPSIyOCIgaGVpZ2h0PSIzNCIgcng9IjYiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuOTgiLz48cmVjdCB4PSIyMiIgeT0iMjIiIHdpZHRoPSIxNiIgaGVpZ2h0PSIzLjUiIHJ4PSIxLjc1IiBmaWxsPSIjQzdEMkZFIi8+PHJlY3QgeD0iMjIiIHk9IjI5IiB3aWR0aD0iMjAiIGhlaWdodD0iMy41IiByeD0iMS43NSIgZmlsbD0iI0M3RDJGRSIvPjxyZWN0IHg9IjIyIiB5PSIzNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMuNSIgcng9IjEuNzUiIGZpbGw9IiNDN0QyRkUiLz48cGF0aCBkPSJNMzcuNSA0MS41IDMxLjggMzUuOWEyLjQgMi40IDAgMCAwLTMuNCAzLjRsNy40IDcuM2EyLjQgMi40IDAgMCAwIDMuNCAwbDEzLTEyLjhhMi40IDIuNCAwIDEgMC0zLjQtMy40eiIgZmlsbD0iIzEwQjk4MSIvPjwvc3ZnPg==">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#4f46e5" />
-
   <style>
     :root {
       --bg: #f5f7fb;
       --surface: #ffffff;
       --surface-2: #eef2ff;
-      --text: #111827;
-      --muted: #6b7280;
+      --text: #172033;
+      --muted: #5f6b85;
       --border: #dbe3f0;
       --primary: #4f46e5;
-      --primary-soft: #e0e7ff;
+      --primary-soft: #e5e7ff;
+      --success: #15803d;
+      --success-soft: #dcfce7;
+      --warning: #b45309;
+      --warning-soft: #ffedd5;
       --danger: #dc2626;
       --danger-soft: #fee2e2;
-      --success: #16a34a;
-      --success-soft: #dcfce7;
-      --warning: #d97706;
-      --warning-soft: #fef3c7;
-      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
+      --shadow: 0 18px 40px rgba(79, 70, 229, 0.12);
+      --radius: 20px;
     }
     [data-theme="dark"] {
-      --bg: #0b1220;
+      --bg: #0f172a;
       --surface: #111827;
-      --surface-2: #172033;
-      --text: #f3f4f6;
-      --muted: #94a3b8;
-      --border: #243043;
-      --primary: #8b9bff;
-      --primary-soft: #1f2950;
-      --danger: #f87171;
-      --danger-soft: #3a1820;
+      --surface-2: #1f2940;
+      --text: #e5eefc;
+      --muted: #9db0d0;
+      --border: #26334d;
+      --primary: #8b83ff;
+      --primary-soft: #22274d;
       --success: #4ade80;
-      --success-soft: #10281b;
-      --warning: #fbbf24;
-      --warning-soft: #3a2f10;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --success-soft: #143020;
+      --warning: #f59e0b;
+      --warning-soft: #3a2a0b;
+      --danger: #f87171;
+      --danger-soft: #3a1717;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 85%, black 15%));
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 82%, #c7d2fe 18%));
       color: var(--text);
     }
-    .app {
-      max-width: 1260px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 20px; }
+    .hero {
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
+      border-radius: 24px; padding: 22px; margin-bottom: 18px;
     }
-    .topbar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      width: 54px; height: 54px; border-radius: 18px;
+      background: linear-gradient(135deg, #6d5ef8, #3b82f6);
+      position: relative; box-shadow: 0 10px 25px rgba(79,70,229,.25);
     }
-    .brand h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); }
-    .brand p { margin: 6px 0 0; color: var(--muted); }
+    .logo::before {
+      content: ''; position: absolute; inset: 11px 13px 11px 13px; border-radius: 8px; background: #fff;
+    }
+    .logo::after {
+      content: '✓'; position: absolute; right: 10px; bottom: 6px; color: #10b981; font-size: 24px; font-weight: 800;
+    }
+    h1, h2, h3, h4, p { margin: 0; }
+    .sub { color: var(--muted); margin-top: 6px; }
     .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .layout {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
+    button, .btn {
+      border: 0; cursor: pointer; border-radius: 12px; padding: 11px 14px; font: inherit;
+      transition: .2s ease; text-decoration: none;
     }
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    .panel-pad { padding: 18px; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .stat {
-      padding: 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      min-height: 118px;
-    }
-    .stat small { color: var(--muted); display: block; margin-bottom: 10px; }
-    .stat strong { font-size: 1.9rem; display: block; }
-    .progress-bar {
-      height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-top: 10px;
-    }
-    .progress-bar span { display: block; height: 100%; background: var(--primary); width: 0%; }
-    .toolbar, .filters {
-      display: grid;
-      grid-template-columns: 1.4fr repeat(3, .8fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    input, textarea, select, button {
-      font: inherit;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 12px 14px;
-    }
-    textarea { min-height: 92px; resize: vertical; }
-    button {
-      cursor: pointer;
-      transition: .2s ease;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      border-color: transparent;
-    }
-    .btn-soft { background: var(--surface-2); }
-    .btn-danger { background: var(--danger); color: white; border-color: transparent; }
-    button:hover { transform: translateY(-1px); }
-    .list { display: grid; gap: 12px; }
-    .item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: color-mix(in srgb, var(--surface) 92%, var(--surface-2) 8%);
-    }
-    .item h3 { margin: 0 0 6px; font-size: 1rem; }
-    .meta, .desc, .mini { color: var(--muted); font-size: .92rem; }
-    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-    .tag {
-      font-size: .82rem;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-    }
-    .priority-High { background: var(--danger-soft); color: var(--danger); }
-    .priority-Medium { background: var(--warning-soft); color: var(--warning); }
-    .priority-Low { background: var(--success-soft); color: var(--success); }
-    .status-Completed { background: var(--success-soft); color: var(--success); }
-    .status-Pending { background: var(--primary-soft); color: var(--primary); }
-    .status-In\ Progress { background: var(--warning-soft); color: var(--warning); }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-    }
-    .day-name, .day {
-      text-align: center;
-      padding: 10px 6px;
-      border-radius: 14px;
-    }
-    .day-name { color: var(--muted); font-weight: 600; font-size: .9rem; }
-    .day {
-      min-height: 82px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-    }
-    .day.muted { opacity: .35; }
-    .day.today { outline: 2px solid var(--primary); }
-    .dots { display: flex; gap: 4px; flex-wrap: wrap; }
-    .dot { width: 9px; height: 9px; border-radius: 50%; }
-    .report-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .full { grid-column: 1 / -1; }
-    .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      user-select: none;
-      cursor: pointer;
-    }
-    .chip.active { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .section-title h2 { margin: 0; font-size: 1.1rem; }
-    .empty { color: var(--muted); padding: 24px 0; text-align: center; }
-    .footer-note { color: var(--muted); font-size: .9rem; margin-top: 10px; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-soft { background: var(--primary-soft); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border)); }
+    .btn-soft:hover { transform: translateY(-1px); }
+    .btn-danger { background: var(--danger-soft); color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 18%, var(--border)); }
+    .small { padding: 8px 11px; font-size: .92rem; }
+    .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
     .stack { display: grid; gap: 18px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 18px;
+    }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .metric {
+      padding: 16px; border-radius: 18px; background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 70%, var(--surface-2) 30%), var(--surface));
+      border: 1px solid var(--border);
+    }
+    .metric .n { font-size: 1.9rem; font-weight: 800; margin-top: 8px; }
+    .mini { color: var(--muted); font-size: .92rem; }
+    form { display: grid; gap: 12px; }
+    .two { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    label { display: grid; gap: 6px; font-weight: 600; font-size: .95rem; }
+    input, textarea, select {
+      width: 100%; padding: 12px 13px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font: inherit;
+    }
+    textarea { min-height: 108px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent); border-color: var(--primary); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: .9rem; cursor: pointer;
+    }
+    .chip.active { background: var(--primary-soft); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 30%, var(--border)); }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
+    .toolbar > * { flex: 1; min-width: 130px; }
+    .list { display: grid; gap: 12px; }
     .section-block { display: grid; gap: 12px; }
     .section-divider { margin: 6px 0 2px; padding-top: 10px; border-top: 1px solid var(--border); }
-    .section-divider h3 { margin: 0; font-size: 1rem; }
-    .completed-copy { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
-    .item.completed { opacity: .78; background: color-mix(in srgb, var(--surface) 86%, var(--success-soft) 14%); }
-    .item.active-edit { outline: 2px solid var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 15%, transparent); }
-    .day { cursor: pointer; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+    .completed-copy { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+    .item {
+      display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start;
+      padding: 16px; border-radius: 18px; border: 1px solid var(--border); background: var(--surface);
+    }
+    .item.completed { opacity: .8; background: color-mix(in srgb, var(--surface) 88%, var(--success-soft) 12%); }
+    .item.active-edit { outline: 2px solid var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 12%, transparent); }
+    .item h3 { margin-bottom: 6px; }
+    .meta, .desc { color: var(--muted); }
+    .desc { margin-top: 8px; line-height: 1.5; }
+    .tags, .inline-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tag { font-size: .84rem; border-radius: 999px; padding: 7px 9px; border: 1px solid transparent; }
+    .priority-High { background: var(--danger-soft); color: var(--danger); }
+    .priority-Medium { background: var(--warning-soft); color: var(--warning); }
+    .priority-Low { background: var(--primary-soft); color: var(--primary); }
+    .status-Pending { background: var(--warning-soft); color: var(--warning); }
+    .status-In\ Progress { background: var(--primary-soft); color: var(--primary); }
+    .status-Completed { background: var(--success-soft); color: var(--success); }
+    .empty {
+      padding: 24px; text-align: center; color: var(--muted); border-radius: 18px; border: 1px dashed var(--border);
+      background: color-mix(in srgb, var(--surface) 70%, var(--surface-2) 30%);
+    }
+    .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; }
+    .calendar-shell { display: grid; gap: 12px; }
+    .calendar-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .calendar-layout { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); align-items: start; }
+    .calendar-layout.compact { grid-template-columns: minmax(0, 1fr); }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-name, .day {
+      border: 1px solid var(--border); border-radius: 14px; min-height: 80px; padding: 10px; background: var(--surface);
+    }
+    .day-name { min-height: auto; text-align: center; font-weight: 700; color: var(--muted); }
+    .day {
+      text-align: left; color: inherit; cursor: pointer; transition: .2s ease; position: relative;
+    }
     .day:hover { transform: translateY(-1px); border-color: var(--primary); }
-    .day.selected { background: color-mix(in srgb, var(--primary-soft) 78%, var(--surface) 22%); border-color: var(--primary); }
-    .day strong { font-size: .95rem; }
-    .day-count { font-size: .75rem; color: var(--muted); }
-    .calendar-layout { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); align-items: start; }
-    .calendar-side { border: 1px solid var(--border); border-radius: 16px; padding: 14px; background: color-mix(in srgb, var(--surface) 90%, var(--surface-2) 10%); min-height: 100%; }
-    .calendar-side h3 { margin: 0 0 6px; font-size: 1rem; }
-    .calendar-task-list { display: grid; gap: 10px; margin-top: 12px; }
+    .day.today { outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent); }
+    .day.selected { background: color-mix(in srgb, var(--primary-soft) 80%, var(--surface) 20%); border-color: var(--primary); }
+    .day.muted { opacity: .5; }
+    .day strong { display: block; font-size: .95rem; }
+    .day-count { margin-top: 8px; font-size: .76rem; color: var(--muted); }
+    .dots { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
+    .dot { width: 8px; height: 8px; border-radius: 999px; }
+    .calendar-side {
+      border: 1px solid var(--border); border-radius: 16px; padding: 14px; background: color-mix(in srgb, var(--surface) 90%, var(--surface-2) 10%);
+      position: sticky; top: 16px;
+    }
+    .calendar-side[hidden] { display: none !important; }
+    .calendar-side-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      display: inline-grid; place-items: center;
+    }
+    .calendar-task-list { display: grid; gap: 10px; margin-top: 12px; max-height: 420px; overflow: auto; }
     .calendar-task { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: var(--surface); }
-    .calendar-task h4 { margin: 0 0 6px; font-size: .98rem; }
-    .calendar-task .mini { margin-top: 4px; }
-    .calendar-empty { color: var(--muted); padding: 14px 0 2px; }
-    .inline-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-    .small { padding: 8px 10px; font-size: .9rem; }
-    .hidden { display: none; }
+    .calendar-task h4 { margin-bottom: 6px; }
+    .footer-note { color: var(--muted); font-size: .9rem; margin-top: 10px; }
+    .reports { display: grid; gap: 10px; }
+    .report { padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 84%, var(--surface-2) 16%); }
     @media (max-width: 980px) {
-      .layout { grid-template-columns: 1fr; }
-      .stats, .report-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid, .calendar-layout { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .hero { flex-direction: column; align-items: flex-start; }
+      .calendar-side { position: static; }
     }
     @media (max-width: 720px) {
-      .stats, .toolbar, .filters, .form-grid, .report-grid { grid-template-columns: 1fr; }
-      .app { padding: 14px 12px 28px; }
-      .day { min-height: 70px; }
+      .two, .three { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .item { grid-template-columns: 1fr; }
+      .calendar-grid { gap: 6px; }
+      .day-name, .day { min-height: 74px; padding: 8px; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
+  <div class="wrap">
+    <header class="hero">
       <div class="brand">
-        <h1>Backlog Tracker</h1>
-        <p>Track pending work, assignments, bills, and deadlines in one place.</p>
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Backlog Tracker</h1>
+          <p class="sub">Track pending work, plan priorities, and stay on top of deadlines.</p>
+        </div>
       </div>
       <div class="actions">
-        <button id="themeToggle" class="btn-soft">Toggle theme</button>
-        <button id="backupBtn" class="btn-soft">Export backup</button>
-        <label class="btn-soft" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:12px 14px;border-radius:14px;border:1px solid var(--border);">
-          Import backup
-          <input id="importFile" type="file" accept="application/json" class="hidden" />
+        <button class="btn-soft" id="themeToggle">Toggle Theme</button>
+        <button class="btn-soft" id="exportBtn">Export Backup</button>
+        <label class="btn-soft" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;">
+          Import Backup
+          <input type="file" id="importFile" accept="application/json" hidden>
         </label>
       </div>
     </header>
 
-    <section class="stats" id="stats"></section>
+    <section class="card" style="margin-bottom:18px;">
+      <div class="metrics">
+        <div class="metric"><div class="mini">Total Tasks</div><div class="n" id="metricTotal">0</div></div>
+        <div class="metric"><div class="mini">Pending</div><div class="n" id="metricPending">0</div></div>
+        <div class="metric"><div class="mini">In Progress</div><div class="n" id="metricProgress">0</div></div>
+        <div class="metric"><div class="mini">Completed</div><div class="n" id="metricCompleted">0</div></div>
+      </div>
+    </section>
 
-    <div class="layout">
-      <main class="stack">
-        <section class="panel panel-pad">
-          <div class="section-title">
-            <h2>Backlog list</h2>
-            <div class="inline-buttons">
-              <button id="notifyBtn" class="btn-soft small">Enable reminders</button>
-              <button id="dailySummaryBtn" class="btn-soft small">Daily summary</button>
-              <button id="weeklyReportBtn" class="btn-soft small">Weekly report</button>
+    <div class="grid">
+      <div class="stack">
+        <section class="card" id="formSection">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;">
+            <div>
+              <h2 id="formTitle">Add Backlog</h2>
+              <p class="sub">Create tasks, update priorities, and set reminders.</p>
             </div>
+            <button class="btn-soft small" id="resetBtn" type="button">Reset Form</button>
           </div>
-          <div class="toolbar">
-            <input id="searchInput" placeholder="Search by title" />
-            <select id="categoryFilter"><option value="">All categories</option><option>Study</option><option>Work</option><option>Personal</option><option>Bills</option><option>Other</option></select>
-            <select id="priorityFilter"><option value="">All priorities</option><option>Low</option><option>Medium</option><option>High</option></select>
-            <select id="statusFilter"><option value="">All statuses</option><option>Pending</option><option>In Progress</option><option>Completed</option></select>
-          </div>
-          <div id="backlogList" class="list"></div>
-        </section>
-
-        <section class="panel panel-pad">
-          <div class="section-title">
-            <h2>Calendar view</h2>
-            <div class="inline-buttons">
-              <button id="prevMonth" class="btn-soft small">Previous</button>
-              <button id="nextMonth" class="btn-soft small">Next</button>
+          <form id="backlogForm">
+            <label>Task Title<input id="title" required placeholder="Enter task title"></label>
+            <label>Description<textarea id="description" placeholder="Add notes or context"></textarea></label>
+            <div class="three">
+              <label>Category<input id="category" placeholder="Work, Personal, Study"></label>
+              <label>Priority
+                <select id="priority">
+                  <option>High</option>
+                  <option selected>Medium</option>
+                  <option>Low</option>
+                </select>
+              </label>
+              <label>Status
+                <select id="status">
+                  <option selected>Pending</option>
+                  <option>In Progress</option>
+                  <option>Completed</option>
+                </select>
+              </label>
             </div>
-          </div>
-          <div class="mini" id="calendarLabel" style="margin-bottom:12px;"></div>
-          <div class="calendar-layout">
-            <div class="calendar-grid" id="calendar"></div>
-            <div class="calendar-side">
-              <h3 id="calendarDetailsTitle">Tasks for selected date</h3>
-              <div class="mini" id="calendarDetailsMeta">Select a date to view scheduled tasks.</div>
-              <div id="calendarDetails" class="calendar-task-list"></div>
+            <div class="two">
+              <label>Due Date and Time<input id="dueAt" type="datetime-local" required></label>
+              <label>Reminder Presets
+                <div class="chips" id="reminderChips"></div>
+              </label>
             </div>
-          </div>
-          <p class="footer-note">Red dots show overdue items, green shows completed, blue shows active upcoming items. Tap any date to see full task details.</p>
-        </section>
-      </main>
-
-      <aside class="stack">
-        <section class="panel panel-pad">
-          <div class="section-title"><h2 id="formTitle">Add backlog</h2></div>
-          <form id="backlogForm" class="form-grid">
-            <input class="full" id="title" placeholder="Title" required />
-            <textarea class="full" id="description" placeholder="Description"></textarea>
-            <select id="category" required><option>Study</option><option>Work</option><option>Personal</option><option>Bills</option><option>Other</option></select>
-            <select id="priority" required><option>Low</option><option selected>Medium</option><option>High</option></select>
-            <input id="dueDate" type="date" required />
-            <input id="dueTime" type="time" required />
-            <div class="full">
-              <div class="mini" style="margin-bottom:8px;">Reminder timings</div>
-              <div class="chip-row" id="reminderChips"></div>
-            </div>
-            <div class="full inline-buttons">
-              <button class="btn-primary" type="submit">Save backlog</button>
-              <button class="btn-soft" id="resetFormBtn" type="button">Reset</button>
+            <div class="toolbar">
+              <button class="btn-primary" type="submit" id="submitBtn">Save Backlog</button>
+              <button class="btn-soft" type="button" id="notifyBtn">Enable Notifications</button>
             </div>
           </form>
         </section>
 
-        <section class="panel panel-pad">
-          <div class="section-title"><h2>Reports</h2></div>
-          <div id="reports" class="report-grid"></div>
+        <section class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;">
+            <div>
+              <h2>Backlog List</h2>
+              <p class="sub">Sorted by status, priority, and due date.</p>
+            </div>
+          </div>
+          <div class="toolbar" style="margin-bottom:14px;">
+            <input id="searchInput" placeholder="Search by task title">
+            <input id="filterCategory" placeholder="Filter category">
+            <select id="filterPriority">
+              <option value="">All priorities</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+            <select id="filterStatus">
+              <option value="">All statuses</option>
+              <option>Pending</option>
+              <option>In Progress</option>
+              <option>Completed</option>
+            </select>
+          </div>
+          <div class="list" id="backlogList"></div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="card">
+          <div class="calendar-nav">
+            <div>
+              <h2>Calendar</h2>
+              <p class="sub">See work planned by day.</p>
+            </div>
+            <div class="actions">
+              <button class="btn-soft small" id="prevMonth">Prev</button>
+              <button class="btn-soft small" id="nextMonth">Next</button>
+            </div>
+          </div>
+          <div class="calendar-shell">
+            <div class="calendar-toolbar">
+              <div class="mini" id="calendarLabel"></div>
+              <button class="btn-soft small" type="button" id="toggleCalendarTasks" hidden>Hide Tasks</button>
+            </div>
+            <div class="calendar-layout compact" id="calendarLayout">
+              <div class="calendar-grid" id="calendar"></div>
+              <aside class="calendar-side" id="calendarSide" hidden>
+                <div class="calendar-side-header">
+                  <div>
+                    <h3 id="calendarDetailsTitle">Tasks for selected date</h3>
+                    <div class="mini" id="calendarDetailsMeta">Select a date to view scheduled tasks.</div>
+                  </div>
+                  <button class="icon-btn" type="button" id="closeCalendarTasks" aria-label="Close task details">✕</button>
+                </div>
+                <div id="calendarDetails" class="calendar-task-list"></div>
+              </aside>
+            </div>
+          </div>
+          <p class="footer-note">Red dots show overdue items, green shows completed, blue shows active upcoming items. Select a date to open or update the task panel.</p>
         </section>
 
-        <section class="panel panel-pad">
-          <div class="section-title"><h2>Widget preview</h2></div>
-          <div id="widgetPreview"></div>
-          <p class="footer-note">This website version simulates a mobile home-screen widget with your nearest due tasks.</p>
+        <section class="card">
+          <h2 style="margin-bottom:12px;">Reports</h2>
+          <div class="reports" id="reports"></div>
         </section>
-      </aside>
+      </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'backlog-tracker-web-data-v1';
-    const THEME_KEY = 'backlog-tracker-theme';
-    const REMINDER_OPTIONS = [7, 3, 1, 0];
+    const STORAGE_KEY = 'backlog-tracker-v4';
+    const REMINDER_PRESETS = [7, 3, 1, 0];
     let editingId = null;
     let calendarDate = new Date();
-    let selectedCalendarDate = new Date();
-    let notificationPermissionAsked = false;
+    let selectedCalendarDate = null;
+    let calendarPanelOpen = false;
+
+    const state = {
+      items: [],
+      reminders: REMINDER_PRESETS.slice(),
+      search: '',
+      filters: { category: '', priority: '', status: '' }
+    };
 
     const elements = {
-      stats: document.getElementById('stats'),
-      reports: document.getElementById('reports'),
-      backlogList: document.getElementById('backlogList'),
-      widgetPreview: document.getElementById('widgetPreview'),
       form: document.getElementById('backlogForm'),
       formTitle: document.getElementById('formTitle'),
-      search: document.getElementById('searchInput'),
-      categoryFilter: document.getElementById('categoryFilter'),
-      priorityFilter: document.getElementById('priorityFilter'),
-      statusFilter: document.getElementById('statusFilter'),
+      submitBtn: document.getElementById('submitBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      title: document.getElementById('title'),
+      description: document.getElementById('description'),
+      category: document.getElementById('category'),
+      priority: document.getElementById('priority'),
+      status: document.getElementById('status'),
+      dueAt: document.getElementById('dueAt'),
       reminderChips: document.getElementById('reminderChips'),
-      themeToggle: document.getElementById('themeToggle'),
-      backupBtn: document.getElementById('backupBtn'),
+      notifyBtn: document.getElementById('notifyBtn'),
+      exportBtn: document.getElementById('exportBtn'),
       importFile: document.getElementById('importFile'),
+      themeToggle: document.getElementById('themeToggle'),
+      searchInput: document.getElementById('searchInput'),
+      filterCategory: document.getElementById('filterCategory'),
+      filterPriority: document.getElementById('filterPriority'),
+      filterStatus: document.getElementById('filterStatus'),
+      backlogList: document.getElementById('backlogList'),
+      metricTotal: document.getElementById('metricTotal'),
+      metricPending: document.getElementById('metricPending'),
+      metricProgress: document.getElementById('metricProgress'),
+      metricCompleted: document.getElementById('metricCompleted'),
+      prevMonth: document.getElementById('prevMonth'),
+      nextMonth: document.getElementById('nextMonth'),
       calendar: document.getElementById('calendar'),
       calendarLabel: document.getElementById('calendarLabel'),
+      calendarLayout: document.getElementById('calendarLayout'),
+      calendarSide: document.getElementById('calendarSide'),
       calendarDetails: document.getElementById('calendarDetails'),
       calendarDetailsTitle: document.getElementById('calendarDetailsTitle'),
       calendarDetailsMeta: document.getElementById('calendarDetailsMeta'),
-      prevMonth: document.getElementById('prevMonth'),
-      nextMonth: document.getElementById('nextMonth'),
-      notifyBtn: document.getElementById('notifyBtn'),
-      dailySummaryBtn: document.getElementById('dailySummaryBtn'),
-      weeklyReportBtn: document.getElementById('weeklyReportBtn'),
-      resetFormBtn: document.getElementById('resetFormBtn')
+      toggleCalendarTasks: document.getElementById('toggleCalendarTasks'),
+      closeCalendarTasks: document.getElementById('closeCalendarTasks'),
+      reports: document.getElementById('reports')
     };
 
-    const defaultState = { items: [], search: '', filters: { category: '', priority: '', status: '' } };
-    let state = loadState();
-
+    function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items)); }
     function loadState() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(defaultState);
-      } catch {
-        return structuredClone(defaultState);
-      }
+      try { state.items = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { state.items = []; }
     }
-
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
-
-    function setTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem(THEME_KEY, theme);
+    function formatDateTime(v) {
+      if (!v) return '-';
+      return new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(v));
     }
-
-    function initTheme() {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved) return setTheme(saved);
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
-
-    function formatDateTime(iso) {
-      return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
-    }
-
     function sameDay(a, b) {
       return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
     }
-
-    function itemStatusTone(item) {
-      if (item.status === 'Completed') return 'Completed';
-      if (new Date(item.dueAt) < new Date()) return 'Overdue';
-      return item.status;
-    }
-
-    function getStatusRank(status) {
-      return ({ 'Pending': 0, 'In Progress': 1, 'Completed': 2 })[status] ?? 99;
-    }
-
-    function getPriorityRank(priority) {
-      return ({ 'High': 0, 'Medium': 1, 'Low': 2 })[priority] ?? 99;
-    }
-
+    function getStatusRank(status) { return ({ 'Pending': 0, 'In Progress': 1, 'Completed': 2 })[status] ?? 99; }
+    function getPriorityRank(priority) { return ({ 'High': 0, 'Medium': 1, 'Low': 2 })[priority] ?? 99; }
     function sortItems(items) {
       return [...items].sort((a, b) => {
-        const statusDiff = getStatusRank(a.status) - getStatusRank(b.status);
-        if (statusDiff !== 0) return statusDiff;
-        const priorityDiff = getPriorityRank(a.priority) - getPriorityRank(b.priority);
-        if (priorityDiff !== 0) return priorityDiff;
+        const s = getStatusRank(a.status) - getStatusRank(b.status);
+        if (s !== 0) return s;
+        const p = getPriorityRank(a.priority) - getPriorityRank(b.priority);
+        if (p !== 0) return p;
         return new Date(a.dueAt) - new Date(b.dueAt);
       });
     }
-
     function getFilteredItems() {
       const q = state.search.toLowerCase().trim();
       return sortItems(state.items.filter(item => {
         const titleOk = item.title.toLowerCase().includes(q);
-        const categoryOk = !state.filters.category || item.category === state.filters.category;
+        const categoryOk = !state.filters.category || item.category.toLowerCase().includes(state.filters.category.toLowerCase());
         const priorityOk = !state.filters.priority || item.priority === state.filters.priority;
         const statusOk = !state.filters.status || item.status === state.filters.status;
         return titleOk && categoryOk && priorityOk && statusOk;
       }));
     }
-
-    function getMetrics() {
-      const now = new Date();
-      const total = state.items.length;
-      const overdue = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) < now).length;
-      const upcoming = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) >= now && new Date(i.dueAt) <= new Date(now.getTime() + 7 * 86400000)).length;
-      const completed = state.items.filter(i => i.status === 'Completed').length;
-      return { total, overdue, upcoming, completed, progress: total ? Math.round((completed / total) * 100) : 0 };
+    function setCalendarPanel(open) {
+      calendarPanelOpen = open && !!selectedCalendarDate;
+      elements.calendarSide.hidden = !calendarPanelOpen;
+      elements.calendarLayout.classList.toggle('compact', !calendarPanelOpen);
+      elements.toggleCalendarTasks.hidden = !selectedCalendarDate;
+      elements.toggleCalendarTasks.textContent = calendarPanelOpen ? 'Hide Tasks' : 'Show Tasks';
     }
-
-    function renderStats() {
-      const { total, overdue, upcoming, progress } = getMetrics();
-      elements.stats.innerHTML = `
-        <div class="stat"><small>Total backlogs</small><strong>${total}</strong><div class="mini">All tracked items</div></div>
-        <div class="stat"><small>Overdue</small><strong>${overdue}</strong><div class="mini">Past due and incomplete</div></div>
-        <div class="stat"><small>Due in 7 days</small><strong>${upcoming}</strong><div class="mini">Upcoming deadlines</div></div>
-        <div class="stat"><small>Completion progress</small><strong>${progress}%</strong><div class="progress-bar"><span style="width:${progress}%"></span></div></div>
-      `;
+    function renderReminderChips(active = REMINDER_PRESETS) {
+      state.reminders = [...active];
+      elements.reminderChips.innerHTML = REMINDER_PRESETS.map(v => {
+        const label = v === 0 ? 'At time' : `${v} day${v > 1 ? 's' : ''} before`;
+        return `<button type="button" class="chip ${active.includes(v) ? 'active' : ''}" data-value="${v}">${label}</button>`;
+      }).join('');
+      elements.reminderChips.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', () => {
+        const value = Number(chip.dataset.value);
+        const set = new Set(state.reminders);
+        set.has(value) ? set.delete(value) : set.add(value);
+        renderReminderChips([...set].sort((a, b) => b - a));
+      }));
     }
+    function resetForm() {
+      editingId = null;
+      elements.form.reset();
+      elements.formTitle.textContent = 'Add Backlog';
+      elements.submitBtn.textContent = 'Save Backlog';
+      elements.priority.value = 'Medium';
+      elements.status.value = 'Pending';
+      const dt = new Date(); dt.setHours(dt.getHours() + 2); dt.setMinutes(0,0,0);
+      elements.dueAt.value = new Date(dt.getTime() - dt.getTimezoneOffset()*60000).toISOString().slice(0,16);
+      renderReminderChips([7,3,1,0]);
+    }
+    function editItem(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+      editingId = id;
+      elements.formTitle.textContent = 'Edit Backlog';
+      elements.submitBtn.textContent = 'Update Backlog';
+      elements.title.value = item.title;
+      elements.description.value = item.description || '';
+      elements.category.value = item.category || '';
+      elements.priority.value = item.priority;
+      elements.status.value = item.status;
+      elements.dueAt.value = item.dueAt.slice(0,16);
+      renderReminderChips(item.reminders || [7,3,1,0]);
+      document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => elements.title.focus(), 250);
+      refresh();
+    }
+    function cycleStatus(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+      item.status = item.status === 'Pending' ? 'In Progress' : item.status === 'In Progress' ? 'Completed' : 'Pending';
+      saveState(); refresh();
+    }
+    function deleteItem(id) {
+      state.items = state.items.filter(i => i.id !== id);
+      saveState(); refresh();
+    }
+    window.editItem = editItem;
+    window.cycleStatus = cycleStatus;
+    window.deleteItem = deleteItem;
 
     function renderItemCard(item, completedSection = false) {
       const overdue = item.status !== 'Completed' && new Date(item.dueAt) < new Date();
@@ -468,13 +487,13 @@
         <article class="item ${item.status === 'Completed' ? 'completed' : ''} ${editingId === item.id ? 'active-edit' : ''}">
           <div>
             <h3>${escapeHtml(item.title)}</h3>
-            <div class="meta">${escapeHtml(item.category)} • Due ${formatDateTime(item.dueAt)}</div>
+            <div class="meta">${escapeHtml(item.category || 'General')} • Due ${formatDateTime(item.dueAt)}</div>
             <p class="desc">${escapeHtml(item.description || 'No description added.')}</p>
             <div class="tags">
               <span class="tag priority-${item.priority}">${item.priority} priority</span>
               <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
               ${overdue ? '<span class="tag priority-High">Overdue</span>' : ''}
-              ${completedSection ? '<span class="tag status-Completed">Archived below active tasks</span>' : ''}
+              ${completedSection ? '<span class="tag status-Completed">Completed section</span>' : ''}
             </div>
           </div>
           <div class="inline-buttons">
@@ -485,82 +504,30 @@
         </article>
       `;
     }
-
     function renderList() {
       const items = getFilteredItems();
       if (!items.length) {
         elements.backlogList.innerHTML = '<div class="empty">No backlog items match your current filters.</div>';
         return;
       }
-
-      const activeItems = items.filter(item => item.status !== 'Completed');
-      const completedItems = items.filter(item => item.status === 'Completed');
-
-      const activeMarkup = activeItems.length
-        ? activeItems.map(item => renderItemCard(item)).join('')
-        : '<div class="empty">No active tasks match your current filters.</div>';
-
-      const completedMarkup = completedItems.length
-        ? `
-          <div class="section-divider">
-            <h3>Completed Tasks</h3>
-            <p class="completed-copy">Finished items stay readable here and remain below all active work.</p>
-          </div>
-          <div class="section-block">${completedItems.map(item => renderItemCard(item, true)).join('')}</div>
-        `
-        : '';
-
+      const activeItems = items.filter(i => i.status !== 'Completed');
+      const completedItems = items.filter(i => i.status === 'Completed');
       elements.backlogList.innerHTML = `
-        <div class="section-block">${activeMarkup}</div>
-        ${completedMarkup}
+        <div class="section-block">${activeItems.length ? activeItems.map(i => renderItemCard(i)).join('') : '<div class="empty">No active tasks match your current filters.</div>'}</div>
+        ${completedItems.length ? `<div class="section-divider"><h3>Completed Tasks</h3><p class="completed-copy">Finished items stay here below active work.</p></div><div class="section-block">${completedItems.map(i => renderItemCard(i, true)).join('')}</div>` : ''}
       `;
     }
-
-    function renderReports() {
-      const { total, completed, overdue, upcoming } = getMetrics();
-      const pending = state.items.filter(i => i.status === 'Pending').length;
-      const inProgress = state.items.filter(i => i.status === 'In Progress').length;
-      elements.reports.innerHTML = `
-        <div class="stat"><small>Completed vs pending</small><strong>${completed} / ${pending}</strong><div class="mini">Finished vs waiting</div></div>
-        <div class="stat"><small>Upcoming deadlines</small><strong>${upcoming}</strong><div class="mini">Within the next 7 days</div></div>
-        <div class="stat"><small>Productivity stats</small><strong>${total ? Math.round((completed / total) * 100) : 0}%</strong><div class="mini">${inProgress} in progress • ${overdue} overdue</div></div>
-      `;
+    function renderMetrics() {
+      elements.metricTotal.textContent = state.items.length;
+      elements.metricPending.textContent = state.items.filter(i => i.status === 'Pending').length;
+      elements.metricProgress.textContent = state.items.filter(i => i.status === 'In Progress').length;
+      elements.metricCompleted.textContent = state.items.filter(i => i.status === 'Completed').length;
     }
-
-    function renderWidgetPreview() {
-      const items = sortItems(state.items.filter(i => i.status !== 'Completed')).slice(0, 3);
-      if (!items.length) {
-        elements.widgetPreview.innerHTML = '<div class="empty">Upcoming tasks will appear here.</div>';
-        return;
-      }
-      elements.widgetPreview.innerHTML = items.map(item => `<div style="padding:10px 0;border-bottom:1px solid var(--border);"><strong>${escapeHtml(item.title)}</strong><div class="mini">${formatDateTime(item.dueAt)}</div></div>`).join('');
-    }
-
-    function renderReminderChips(selected = [7, 3, 1, 0]) {
-      elements.reminderChips.innerHTML = REMINDER_OPTIONS.map(value => {
-        const label = value === 0 ? 'On due date' : `${value} day${value === 1 ? '' : 's'} before`;
-        return `<button type="button" class="chip ${selected.includes(value) ? 'active' : ''}" data-reminder="${value}">${label}</button>`;
-      }).join('');
-      elements.reminderChips.querySelectorAll('.chip').forEach(chip => {
-        chip.addEventListener('click', () => chip.classList.toggle('active'));
-      });
-    }
-
-    function getSelectedReminders() {
-      return [...elements.reminderChips.querySelectorAll('.chip.active')].map(el => Number(el.dataset.reminder)).sort((a, b) => b - a);
-    }
-
     function renderCalendarDetails(day) {
-      const dayItems = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
+      const items = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
       elements.calendarDetailsTitle.textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long' }).format(day);
-      elements.calendarDetailsMeta.textContent = dayItems.length ? `${dayItems.length} task${dayItems.length === 1 ? '' : 's'} scheduled` : 'No tasks scheduled for this date.';
-
-      if (!dayItems.length) {
-        elements.calendarDetails.innerHTML = '<div class="calendar-empty">No tasks planned for the selected date.</div>';
-        return;
-      }
-
-      elements.calendarDetails.innerHTML = dayItems.map(item => `
+      elements.calendarDetailsMeta.textContent = items.length ? `${items.length} task${items.length === 1 ? '' : 's'} scheduled` : 'No tasks scheduled for this date.';
+      elements.calendarDetails.innerHTML = items.length ? items.map(item => `
         <article class="calendar-task">
           <h4>${escapeHtml(item.title)}</h4>
           <div class="tags">
@@ -569,33 +536,29 @@
           </div>
           <div class="mini">Due: ${formatDateTime(item.dueAt)}</div>
         </article>
-      `).join('');
+      `).join('') : '<div class="empty" style="padding:14px;">No tasks planned for the selected date.</div>';
     }
-
     function renderCalendar() {
       const year = calendarDate.getFullYear();
       const month = calendarDate.getMonth();
-      if (selectedCalendarDate.getFullYear() !== year || selectedCalendarDate.getMonth() !== month) {
-        selectedCalendarDate = new Date(year, month, 1);
-      }
       elements.calendarLabel.textContent = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(calendarDate);
       const firstDay = new Date(year, month, 1);
       const start = new Date(firstDay);
       start.setDate(1 - ((firstDay.getDay() + 6) % 7));
-      const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      const cells = names.map(name => `<div class="day-name">${name}</div>`);
+      const names = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      const cells = names.map(n => `<div class="day-name">${n}</div>`);
       for (let i = 0; i < 42; i++) {
         const day = new Date(start);
         day.setDate(start.getDate() + i);
-        const dayItems = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
-        const dots = dayItems.slice(0, 4).map(item => {
+        const items = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
+        const dots = items.slice(0,4).map(item => {
           const color = item.status === 'Completed' ? 'var(--success)' : new Date(item.dueAt) < new Date() ? 'var(--danger)' : 'var(--primary)';
           return `<span class="dot" style="background:${color}"></span>`;
         }).join('');
         cells.push(`
-          <button type="button" class="day ${day.getMonth() !== month ? 'muted' : ''} ${sameDay(day, new Date()) ? 'today' : ''} ${sameDay(day, selectedCalendarDate) ? 'selected' : ''}" data-date="${day.toISOString()}">
+          <button type="button" class="day ${day.getMonth() !== month ? 'muted' : ''} ${sameDay(day, new Date()) ? 'today' : ''} ${selectedCalendarDate && sameDay(day, selectedCalendarDate) ? 'selected' : ''}" data-date="${day.toISOString()}">
             <strong>${day.getDate()}</strong>
-            <div class="day-count">${dayItems.length ? `${dayItems.length} task${dayItems.length === 1 ? '' : 's'}` : 'No tasks'}</div>
+            <div class="day-count">${items.length ? `${items.length} task${items.length === 1 ? '' : 's'}` : 'No tasks'}</div>
             <div class="dots">${dots}</div>
           </button>
         `);
@@ -604,280 +567,113 @@
       elements.calendar.querySelectorAll('.day[data-date]').forEach(button => {
         button.addEventListener('click', () => {
           selectedCalendarDate = new Date(button.dataset.date);
+          renderCalendarDetails(selectedCalendarDate);
+          setCalendarPanel(true);
           renderCalendar();
         });
       });
-      renderCalendarDetails(selectedCalendarDate);
+      if (selectedCalendarDate) renderCalendarDetails(selectedCalendarDate);
+      setCalendarPanel(calendarPanelOpen);
     }
-
-    function resetForm() {
-      editingId = null;
-      elements.form.reset();
-      elements.formTitle.textContent = 'Add backlog';
-      const tomorrow = new Date(Date.now() + 86400000);
-      document.getElementById('dueDate').value = tomorrow.toISOString().slice(0, 10);
-      document.getElementById('dueTime').value = '18:00';
-      renderReminderChips([7, 3, 1, 0]);
+    function renderReports() {
+      const active = sortItems(state.items.filter(i => i.status !== 'Completed')).slice(0, 3);
+      const overdue = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) < new Date());
+      const upcoming = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) >= new Date()).sort((a,b) => new Date(a.dueAt) - new Date(b.dueAt)).slice(0,3);
+      elements.reports.innerHTML = `
+        <div class="report"><strong>Overdue:</strong> ${overdue.length}</div>
+        <div class="report"><strong>Priority Focus:</strong> ${active.length ? active.map(i => escapeHtml(i.title)).join(', ') : 'No active tasks'}</div>
+        <div class="report"><strong>Upcoming:</strong> ${upcoming.length ? upcoming.map(i => `${escapeHtml(i.title)} (${formatDateTime(i.dueAt)})`).join(' • ') : 'Nothing upcoming'}</div>
+      `;
     }
-
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>'"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\'': '&#39;', '"': '&quot;' }[m]));
-    }
-
-    window.editItem = function(id) {
-      const item = state.items.find(x => x.id === id);
-      if (!item) return;
-      editingId = id;
-      elements.formTitle.textContent = 'Edit backlog';
-      document.getElementById('title').value = item.title;
-      document.getElementById('description').value = item.description;
-      document.getElementById('category').value = item.category;
-      document.getElementById('priority').value = item.priority;
-      const dt = new Date(item.dueAt);
-      document.getElementById('dueDate').value = dt.toISOString().slice(0, 10);
-      document.getElementById('dueTime').value = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
-      renderReminderChips(item.reminders || [7, 3, 1, 0]);
-      const formSection = elements.form.closest('section');
-      if (formSection) formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(() => document.getElementById('title').focus(), 250);
-    }
-
-    window.deleteItem = function(id) {
-      state.items = state.items.filter(item => item.id !== id);
-      saveState();
-      scheduleAllReminders();
-      refresh();
-    }
-
-    window.cycleStatus = function(id) {
-      const order = ['Pending', 'In Progress', 'Completed'];
-      const item = state.items.find(x => x.id === id);
-      if (!item) return;
-      item.status = order[(order.indexOf(item.status) + 1) % order.length];
-      saveState();
-      refresh();
-    }
-
-    function submitForm(event) {
-      event.preventDefault();
-      const title = document.getElementById('title').value.trim();
-      const description = document.getElementById('description').value.trim();
-      const category = document.getElementById('category').value;
-      const priority = document.getElementById('priority').value;
-      const dueDate = document.getElementById('dueDate').value;
-      const dueTime = document.getElementById('dueTime').value;
-      const reminders = getSelectedReminders();
-      if (!title || !dueDate || !dueTime) return;
-      const dueAt = new Date(`${dueDate}T${dueTime}:00`).toISOString();
-      if (editingId) {
-        const item = state.items.find(x => x.id === editingId);
-        Object.assign(item, { title, description, category, priority, dueAt, reminders });
-      } else {
-        state.items.push({
-          id: crypto.randomUUID(),
-          title,
-          description,
-          category,
-          priority,
-          dueAt,
-          status: 'Pending',
-          reminders,
-          createdAt: new Date().toISOString(),
-          notified: []
-        });
-      }
-      saveState();
-      scheduleAllReminders();
-      resetForm();
-      refresh();
-      const listSection = document.getElementById('backlogList');
-      if (listSection) listSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
     function refresh() {
-      state.search = elements.search.value || '';
-      state.filters.category = elements.categoryFilter.value;
-      state.filters.priority = elements.priorityFilter.value;
-      state.filters.status = elements.statusFilter.value;
-      saveState();
-      renderStats();
+      renderMetrics();
       renderList();
-      renderReports();
       renderCalendar();
-      renderWidgetPreview();
+      renderReports();
     }
-
-    async function requestNotificationPermission() {
-      if (!('Notification' in window)) {
-        alert('This browser does not support notifications.');
-        return false;
-      }
-      if (Notification.permission === 'granted') return true;
-      if (Notification.permission === 'denied') {
-        alert('Notifications are blocked in your browser settings.');
-        return false;
-      }
-      const permission = await Notification.requestPermission();
-      return permission === 'granted';
-    }
-
-    function showNotification(title, body) {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(title, { body });
-      }
-    }
-
-    function scheduleAllReminders() {
-      state.items.forEach(item => {
-        item.notified = item.notified || [];
-      });
-      saveState();
-    }
-
-    function checkReminders() {
-      const now = new Date();
-      state.items.forEach(item => {
-        if (item.status === 'Completed') return;
-        item.reminders.forEach(offset => {
-          const trigger = new Date(new Date(item.dueAt).getTime() - offset * 86400000);
-          const triggerKey = `${offset}-${new Date(item.dueAt).toISOString()}`;
-          const isDueWindow = now >= trigger && now <= new Date(trigger.getTime() + 15 * 60000);
-          if (isDueWindow && !(item.notified || []).includes(triggerKey) && Notification.permission === 'granted') {
-            const title = offset === 0 ? `Due today: ${item.title}` : `${item.title} due in ${offset} day${offset === 1 ? '' : 's'}`;
-            showNotification(title, `${item.category} • ${item.priority} priority`);
-            item.notified.push(triggerKey);
-          }
-        });
-      });
-      saveState();
-    }
-
-    function showDailySummary() {
-      const now = new Date();
-      const dueToday = state.items.filter(i => i.status !== 'Completed' && sameDay(new Date(i.dueAt), now)).length;
-      const overdue = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) < now).length;
-      alert(`Daily Summary\n\nDue today: ${dueToday}\nOverdue: ${overdue}\nOpen items: ${state.items.filter(i => i.status !== 'Completed').length}`);
-    }
-
-    function showWeeklyReport() {
-      const now = new Date();
-      const weekAhead = new Date(now.getTime() + 7 * 86400000);
-      const upcoming = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) >= now && new Date(i.dueAt) <= weekAhead).length;
-      const completed = state.items.filter(i => i.status === 'Completed').length;
-      alert(`Weekly Progress Report\n\nCompleted items: ${completed}\nUpcoming deadlines: ${upcoming}\nCompletion rate: ${getMetrics().progress}%`);
-    }
-
     function exportBackup() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+      const blob = new Blob([JSON.stringify(state.items, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
-      a.href = url;
+      a.href = URL.createObjectURL(blob);
       a.download = 'backlog-tracker-backup.json';
       a.click();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(a.href);
     }
-
     function importBackup(file) {
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const parsed = JSON.parse(reader.result);
-          if (!parsed.items) throw new Error('Invalid backup file');
-          state = parsed;
-          saveState();
-          resetForm();
-          refresh();
-        } catch {
-          alert('Could not import that backup file.');
-        }
+          const data = JSON.parse(reader.result);
+          if (!Array.isArray(data)) throw new Error('Invalid backup');
+          state.items = data;
+          saveState(); refresh();
+        } catch { alert('Could not import backup file.'); }
       };
       reader.readAsText(file);
     }
-
-    function bindEvents() {
-      elements.form.addEventListener('submit', submitForm);
-      elements.search.addEventListener('input', refresh);
-      elements.categoryFilter.addEventListener('change', refresh);
-      elements.priorityFilter.addEventListener('change', refresh);
-      elements.statusFilter.addEventListener('change', refresh);
-      elements.resetFormBtn.addEventListener('click', resetForm);
-      elements.themeToggle.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        setTheme(current === 'dark' ? 'light' : 'dark');
-      });
-      elements.backupBtn.addEventListener('click', exportBackup);
-      elements.importFile.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (file) importBackup(file);
-        e.target.value = '';
-      });
-      elements.prevMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); selectedCalendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1); renderCalendar(); });
-      elements.nextMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); selectedCalendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1); renderCalendar(); });
-      elements.notifyBtn.addEventListener('click', async () => {
-        const ok = await requestNotificationPermission();
-        notificationPermissionAsked = ok;
-        if (ok) alert('Notifications enabled. Keep this page available in your browser for reminder checks.');
-      });
-      elements.dailySummaryBtn.addEventListener('click', showDailySummary);
-      elements.weeklyReportBtn.addEventListener('click', showWeeklyReport);
-    }
-
     function seedDemoIfEmpty() {
       if (state.items.length) return;
       const now = new Date();
+      const mk = (title, d, priority, status, category) => ({
+        id: uid(), title, description: '', category, priority, status,
+        dueAt: new Date(now.getTime() + d*86400000).toISOString().slice(0,16), reminders: [3,1,0]
+      });
       state.items = [
-        {
-          id: crypto.randomUUID(),
-          title: 'Submit math assignment',
-          description: 'Finish calculus problems and upload the PDF.',
-          category: 'Study',
-          priority: 'High',
-          dueAt: new Date(now.getTime() + 2 * 86400000).toISOString(),
-          status: 'Pending',
-          reminders: [3, 1, 0],
-          createdAt: now.toISOString(),
-          notified: []
-        },
-        {
-          id: crypto.randomUUID(),
-          title: 'Pay electricity bill',
-          description: 'Pay through net banking before the late fee applies.',
-          category: 'Bills',
-          priority: 'Medium',
-          dueAt: new Date(now.getTime() + 5 * 86400000).toISOString(),
-          status: 'In Progress',
-          reminders: [7, 3, 1, 0],
-          createdAt: now.toISOString(),
-          notified: []
-        },
-        {
-          id: crypto.randomUUID(),
-          title: 'Portfolio redesign',
-          description: 'Prepare the mobile mockup and write the case study.',
-          category: 'Work',
-          priority: 'Low',
-          dueAt: new Date(now.getTime() - 2 * 86400000).toISOString(),
-          status: 'Pending',
-          reminders: [1, 0],
-          createdAt: now.toISOString(),
-          notified: []
-        }
+        mk('Prepare weekly report', 1, 'High', 'Pending', 'Work'),
+        mk('Follow up client changes', 2, 'Medium', 'In Progress', 'Work'),
+        mk('Review notes', -1, 'Low', 'Completed', 'Study')
       ];
       saveState();
     }
 
-    initTheme();
-    bindEvents();
+    elements.form.addEventListener('submit', e => {
+      e.preventDefault();
+      const item = {
+        id: editingId || uid(),
+        title: elements.title.value.trim(),
+        description: elements.description.value.trim(),
+        category: elements.category.value.trim(),
+        priority: elements.priority.value,
+        status: elements.status.value,
+        dueAt: elements.dueAt.value,
+        reminders: [...state.reminders]
+      };
+      if (!item.title || !item.dueAt) return;
+      if (editingId) {
+        const i = state.items.findIndex(x => x.id === editingId);
+        if (i >= 0) state.items[i] = item;
+      } else {
+        state.items.push(item);
+      }
+      saveState();
+      resetForm();
+      refresh();
+      document.getElementById('backlogList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    elements.resetBtn.addEventListener('click', resetForm);
+    elements.searchInput.addEventListener('input', e => { state.search = e.target.value; renderList(); });
+    elements.filterCategory.addEventListener('input', e => { state.filters.category = e.target.value; renderList(); });
+    elements.filterPriority.addEventListener('change', e => { state.filters.priority = e.target.value; renderList(); });
+    elements.filterStatus.addEventListener('change', e => { state.filters.status = e.target.value; renderList(); });
+    elements.prevMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
+    elements.nextMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
+    elements.toggleCalendarTasks.addEventListener('click', () => setCalendarPanel(!calendarPanelOpen));
+    elements.closeCalendarTasks.addEventListener('click', () => setCalendarPanel(false));
+    elements.exportBtn.addEventListener('click', exportBackup);
+    elements.importFile.addEventListener('change', e => e.target.files[0] && importBackup(e.target.files[0]));
+    elements.themeToggle.addEventListener('click', () => {
+      document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+    elements.notifyBtn.addEventListener('click', async () => {
+      if (!('Notification' in window)) return alert('Notifications are not supported in this browser.');
+      const res = await Notification.requestPermission();
+      alert(res === 'granted' ? 'Notifications enabled.' : 'Notification permission not granted.');
+    });
+
+    loadState();
     seedDemoIfEmpty();
-    selectedCalendarDate = new Date();
     resetForm();
-    elements.search.value = state.search || '';
-    elements.categoryFilter.value = state.filters.category || '';
-    elements.priorityFilter.value = state.filters.priority || '';
-    elements.statusFilter.value = state.filters.status || '';
     refresh();
-    setInterval(checkReminders, 60000);
-    checkReminders();
   </script>
 </body>
 </html>
