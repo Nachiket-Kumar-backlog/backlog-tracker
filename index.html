@@ -1,679 +1,489 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Backlog Tracker</title>
-  <meta name="theme-color" content="#4f46e5" />
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --surface-2: #eef2ff;
-      --text: #172033;
-      --muted: #5f6b85;
-      --border: #dbe3f0;
-      --primary: #4f46e5;
-      --primary-soft: #e5e7ff;
-      --success: #15803d;
-      --success-soft: #dcfce7;
-      --warning: #b45309;
-      --warning-soft: #ffedd5;
-      --danger: #dc2626;
-      --danger-soft: #fee2e2;
-      --shadow: 0 18px 40px rgba(79, 70, 229, 0.12);
-      --radius: 20px;
-    }
-    [data-theme="dark"] {
-      --bg: #0f172a;
-      --surface: #111827;
-      --surface-2: #1f2940;
-      --text: #e5eefc;
-      --muted: #9db0d0;
-      --border: #26334d;
-      --primary: #8b83ff;
-      --primary-soft: #22274d;
-      --success: #4ade80;
-      --success-soft: #143020;
-      --warning: #f59e0b;
-      --warning-soft: #3a2a0b;
-      --danger: #f87171;
-      --danger-soft: #3a1717;
-      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 82%, #c7d2fe 18%));
-      color: var(--text);
-    }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 20px; }
-    .hero {
-      display: flex; justify-content: space-between; gap: 16px; align-items: center;
-      background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
-      border-radius: 24px; padding: 22px; margin-bottom: 18px;
-    }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .logo {
-      width: 54px; height: 54px; border-radius: 18px;
-      background: linear-gradient(135deg, #6d5ef8, #3b82f6);
-      position: relative; box-shadow: 0 10px 25px rgba(79,70,229,.25);
-    }
-    .logo::before {
-      content: ''; position: absolute; inset: 11px 13px 11px 13px; border-radius: 8px; background: #fff;
-    }
-    .logo::after {
-      content: '✓'; position: absolute; right: 10px; bottom: 6px; color: #10b981; font-size: 24px; font-weight: 800;
-    }
-    h1, h2, h3, h4, p { margin: 0; }
-    .sub { color: var(--muted); margin-top: 6px; }
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    button, .btn {
-      border: 0; cursor: pointer; border-radius: 12px; padding: 11px 14px; font: inherit;
-      transition: .2s ease; text-decoration: none;
-    }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { filter: brightness(1.05); }
-    .btn-soft { background: var(--primary-soft); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border)); }
-    .btn-soft:hover { transform: translateY(-1px); }
-    .btn-danger { background: var(--danger-soft); color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 18%, var(--border)); }
-    .small { padding: 8px 11px; font-size: .92rem; }
-    .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
-    .stack { display: grid; gap: 18px; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 18px;
-    }
-    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .metric {
-      padding: 16px; border-radius: 18px; background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 70%, var(--surface-2) 30%), var(--surface));
-      border: 1px solid var(--border);
-    }
-    .metric .n { font-size: 1.9rem; font-weight: 800; margin-top: 8px; }
-    .mini { color: var(--muted); font-size: .92rem; }
-    form { display: grid; gap: 12px; }
-    .two { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    label { display: grid; gap: 6px; font-weight: 600; font-size: .95rem; }
-    input, textarea, select {
-      width: 100%; padding: 12px 13px; border-radius: 12px; border: 1px solid var(--border);
-      background: var(--surface); color: var(--text); font: inherit;
-    }
-    textarea { min-height: 108px; resize: vertical; }
-    input:focus, textarea:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent); border-color: var(--primary); }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip {
-      padding: 8px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface);
-      color: var(--muted); font-size: .9rem; cursor: pointer;
-    }
-    .chip.active { background: var(--primary-soft); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 30%, var(--border)); }
-    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
-    .toolbar > * { flex: 1; min-width: 130px; }
-    .list { display: grid; gap: 12px; }
-    .section-block { display: grid; gap: 12px; }
-    .section-divider { margin: 6px 0 2px; padding-top: 10px; border-top: 1px solid var(--border); }
-    .completed-copy { color: var(--muted); font-size: .9rem; margin-top: 4px; }
-    .item {
-      display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start;
-      padding: 16px; border-radius: 18px; border: 1px solid var(--border); background: var(--surface);
-    }
-    .item.completed { opacity: .8; background: color-mix(in srgb, var(--surface) 88%, var(--success-soft) 12%); }
-    .item.active-edit { outline: 2px solid var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 12%, transparent); }
-    .item h3 { margin-bottom: 6px; }
-    .meta, .desc { color: var(--muted); }
-    .desc { margin-top: 8px; line-height: 1.5; }
-    .tags, .inline-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .tag { font-size: .84rem; border-radius: 999px; padding: 7px 9px; border: 1px solid transparent; }
-    .priority-High { background: var(--danger-soft); color: var(--danger); }
-    .priority-Medium { background: var(--warning-soft); color: var(--warning); }
-    .priority-Low { background: var(--primary-soft); color: var(--primary); }
-    .status-Pending { background: var(--warning-soft); color: var(--warning); }
-    .status-In\ Progress { background: var(--primary-soft); color: var(--primary); }
-    .status-Completed { background: var(--success-soft); color: var(--success); }
-    .empty {
-      padding: 24px; text-align: center; color: var(--muted); border-radius: 18px; border: 1px dashed var(--border);
-      background: color-mix(in srgb, var(--surface) 70%, var(--surface-2) 30%);
-    }
-    .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; }
-    .calendar-shell { display: grid; gap: 12px; }
-    .calendar-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .calendar-layout { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); align-items: start; }
-    .calendar-layout.compact { grid-template-columns: minmax(0, 1fr); }
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-    .day-name, .day {
-      border: 1px solid var(--border); border-radius: 14px; min-height: 80px; padding: 10px; background: var(--surface);
-    }
-    .day-name { min-height: auto; text-align: center; font-weight: 700; color: var(--muted); }
-    .day {
-      text-align: left; color: inherit; cursor: pointer; transition: .2s ease; position: relative;
-    }
-    .day:hover { transform: translateY(-1px); border-color: var(--primary); }
-    .day.today { outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent); }
-    .day.selected { background: color-mix(in srgb, var(--primary-soft) 80%, var(--surface) 20%); border-color: var(--primary); }
-    .day.muted { opacity: .5; }
-    .day strong { display: block; font-size: .95rem; }
-    .day-count { margin-top: 8px; font-size: .76rem; color: var(--muted); }
-    .dots { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
-    .dot { width: 8px; height: 8px; border-radius: 999px; }
-    .calendar-side {
-      border: 1px solid var(--border); border-radius: 16px; padding: 14px; background: color-mix(in srgb, var(--surface) 90%, var(--surface-2) 10%);
-      position: sticky; top: 16px;
-    }
-    .calendar-side[hidden] { display: none !important; }
-    .calendar-side-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .icon-btn {
-      width: 36px; height: 36px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
-      display: inline-grid; place-items: center;
-    }
-    .calendar-task-list { display: grid; gap: 10px; margin-top: 12px; max-height: 420px; overflow: auto; }
-    .calendar-task { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: var(--surface); }
-    .calendar-task h4 { margin-bottom: 6px; }
-    .footer-note { color: var(--muted); font-size: .9rem; margin-top: 10px; }
-    .reports { display: grid; gap: 10px; }
-    .report { padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 84%, var(--surface-2) 16%); }
-    @media (max-width: 980px) {
-      .grid, .calendar-layout { grid-template-columns: 1fr; }
-      .metrics { grid-template-columns: repeat(2, 1fr); }
-      .hero { flex-direction: column; align-items: flex-start; }
-      .calendar-side { position: static; }
-    }
-    @media (max-width: 720px) {
-      .two, .three { grid-template-columns: 1fr; }
-      .metrics { grid-template-columns: 1fr 1fr; }
-      .item { grid-template-columns: 1fr; }
-      .calendar-grid { gap: 6px; }
-      .day-name, .day { min-height: 74px; padding: 8px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backlog Tracker & Consistency Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e5e7eb;
+            border-radius: 4px;
+        }
+    </style>
 </head>
-<body>
-  <div class="wrap">
-    <header class="hero">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Backlog Tracker</h1>
-          <p class="sub">Track pending work, plan priorities, and stay on top of deadlines.</p>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 min-h-screen pb-12">
+
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 dark:bg-indigo-500 text-white p-2.5 rounded-xl shadow-md shadow-indigo-500/20">
+                    <i data-lucide="check-square" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">Backlog Tracker Pro</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Monitor Your Consistency & Priorities</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+                <button onclick="exportData()" class="px-3 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Data
+                </button>
+                <label class="px-3 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import Data
+                    <input type="file" id="importFile" accept="*/*" onchange="importData(event)" class="hidden">
+                </label>
+                <button id="themeToggle" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-300 cursor-pointer">
+                    <i data-lucide="sun" id="sunIcon" class="w-5 h-5 hidden"></i>
+                    <i data-lucide="moon" id="moonIcon" class="w-5 h-5"></i>
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="actions">
-        <button class="btn-soft" id="themeToggle">Toggle Theme</button>
-        <button class="btn-soft" id="exportBtn">Export Backup</button>
-        <label class="btn-soft" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;">
-          Import Backup
-          <input type="file" id="importFile" accept="application/json" hidden>
-        </label>
-      </div>
     </header>
 
-    <section class="card" style="margin-bottom:18px;">
-      <div class="metrics">
-        <div class="metric"><div class="mini">Total Tasks</div><div class="n" id="metricTotal">0</div></div>
-        <div class="metric"><div class="mini">Pending</div><div class="n" id="metricPending">0</div></div>
-        <div class="metric"><div class="mini">In Progress</div><div class="n" id="metricProgress">0</div></div>
-        <div class="metric"><div class="mini">Completed</div><div class="n" id="metricCompleted">0</div></div>
-      </div>
-    </section>
-
-    <div class="grid">
-      <div class="stack">
-        <section class="card" id="formSection">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;">
-            <div>
-              <h2 id="formTitle">Add Backlog</h2>
-              <p class="sub">Create tasks, update priorities, and set reminders.</p>
-            </div>
-            <button class="btn-soft small" id="resetBtn" type="button">Reset Form</button>
-          </div>
-          <form id="backlogForm">
-            <label>Task Title<input id="title" required placeholder="Enter task title"></label>
-            <label>Description<textarea id="description" placeholder="Add notes or context"></textarea></label>
-            <div class="three">
-              <label>Category<input id="category" placeholder="Work, Personal, Study"></label>
-              <label>Priority
-                <select id="priority">
-                  <option>High</option>
-                  <option selected>Medium</option>
-                  <option>Low</option>
-                </select>
-              </label>
-              <label>Status
-                <select id="status">
-                  <option selected>Pending</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
-                </select>
-              </label>
-            </div>
-            <div class="two">
-              <label>Due Date and Time<input id="dueAt" type="datetime-local" required></label>
-              <label>Reminder Presets
-                <div class="chips" id="reminderChips"></div>
-              </label>
-            </div>
-            <div class="toolbar">
-              <button class="btn-primary" type="submit" id="submitBtn">Save Backlog</button>
-              <button class="btn-soft" type="button" id="notifyBtn">Enable Notifications</button>
-            </div>
-          </form>
-        </section>
-
-        <section class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;">
-            <div>
-              <h2>Backlog List</h2>
-              <p class="sub">Sorted by status, priority, and due date.</p>
-            </div>
-          </div>
-          <div class="toolbar" style="margin-bottom:14px;">
-            <input id="searchInput" placeholder="Search by task title">
-            <input id="filterCategory" placeholder="Filter category">
-            <select id="filterPriority">
-              <option value="">All priorities</option>
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-            </select>
-            <select id="filterStatus">
-              <option value="">All statuses</option>
-              <option>Pending</option>
-              <option>In Progress</option>
-              <option>Completed</option>
-            </select>
-          </div>
-          <div class="list" id="backlogList"></div>
-        </section>
-      </div>
-
-      <div class="stack">
-        <section class="card">
-          <div class="calendar-nav">
-            <div>
-              <h2>Calendar</h2>
-              <p class="sub">See work planned by day.</p>
-            </div>
-            <div class="actions">
-              <button class="btn-soft small" id="prevMonth">Prev</button>
-              <button class="btn-soft small" id="nextMonth">Next</button>
-            </div>
-          </div>
-          <div class="calendar-shell">
-            <div class="calendar-toolbar">
-              <div class="mini" id="calendarLabel"></div>
-              <button class="btn-soft small" type="button" id="toggleCalendarTasks" hidden>Hide Tasks</button>
-            </div>
-            <div class="calendar-layout compact" id="calendarLayout">
-              <div class="calendar-grid" id="calendar"></div>
-              <aside class="calendar-side" id="calendarSide" hidden>
-                <div class="calendar-side-header">
-                  <div>
-                    <h3 id="calendarDetailsTitle">Tasks for selected date</h3>
-                    <div class="mini" id="calendarDetailsMeta">Select a date to view scheduled tasks.</div>
-                  </div>
-                  <button class="icon-btn" type="button" id="closeCalendarTasks" aria-label="Close task details">✕</button>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-2 space-y-8">
+            
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                    <h2 class="text-lg font-bold">Add New Backlog Task</h2>
                 </div>
-                <div id="calendarDetails" class="calendar-task-list"></div>
-              </aside>
+                
+                <form id="backlogForm" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Subject / Topic</label>
+                            <input type="text" id="taskSubject" required placeholder="Physics, Math, Project..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Target Due Date</label>
+                            <input type="date" id="taskDate" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Priority Level</label>
+                            <select id="taskPriority" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm cursor-pointer">
+                                <option value="3">🔥 High Priority</option>
+                                <option value="2" selected>⚡ Medium Priority</option>
+                                <option value="1">🌱 Low Priority</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Task Details</label>
+                        <textarea id="taskDetails" rows="2" placeholder="Write comprehensive details about the backlog topic here..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-md shadow-indigo-600/10 transition-all text-sm flex items-center justify-center gap-2 cursor-pointer">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Sorted Backlog
+                    </button>
+                </form>
             </div>
-          </div>
-          <p class="footer-note">Red dots show overdue items, green shows completed, blue shows active upcoming items. Select a date to open or update the task panel.</p>
-        </section>
 
-        <section class="card">
-          <h2 style="margin-bottom:12px;">Reports</h2>
-          <div class="reports" id="reports"></div>
-        </section>
-      </div>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="list-todo" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                        <h2 class="text-xl font-bold">Your Sorted Backlogs</h2>
+                    </div>
+                    <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium overflow-x-auto">
+                        <button onclick="filterTasks('all')" class="filter-tab px-4 py-2 rounded-lg bg-white dark:bg-slate-700 shadow-xs text-slate-800 dark:text-white transition-all whitespace-nowrap cursor-pointer">All Items</button>
+                        <button onclick="filterTasks('Pending')" class="filter-tab px-4 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer">Pending</button>
+                        <button onclick="filterTasks('In Progress')" class="filter-tab px-4 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer">Active</button>
+                        <button onclick="filterTasks('Completed')" class="filter-tab px-4 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer">Done</button>
+                    </div>
+                </div>
+
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-left text-sm">
+                        <thead>
+                            <tr class="text-slate-400 font-semibold uppercase tracking-wider text-xs">
+                                <th class="pb-4 px-3">Subject / Topic</th>
+                                <th class="pb-4 px-3">Priority</th>
+                                <th class="pb-4 px-3">Comprehensive Details</th>
+                                <th class="pb-4 px-3">Due Date</th>
+                                <th class="pb-4 px-3">Status Dropdown</th>
+                                <th class="pb-4 px-3 text-right">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="backlogTableBodyDesktop" class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="backlogMobileContainer" class="block md:hidden space-y-4">
+                    </div>
+
+                <div id="emptyState" class="hidden text-center py-12 text-slate-400">
+                    <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
+                    <p class="text-base font-medium">No backlog items trackable!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-5 shadow-xs">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="bell" class="w-5 h-5 text-amber-600 dark:text-amber-400 animate-pulse"></i>
+                    <h2 class="text-base font-bold text-amber-900 dark:text-amber-300">Next-Day School Reminders</h2>
+                </div>
+                <div class="space-y-2">
+                    <input type="text" id="reminderInput" placeholder="Bring Lab File, Chemistry Book tomorrow..." class="w-full px-3 py-1.5 rounded-xl border border-amber-200 dark:border-amber-800/80 text-xs bg-white/80 dark:bg-slate-900/80 focus:outline-none focus:border-amber-500">
+                    <button onclick="addReminder()" class="w-full py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer">Save Reminder</button>
+                </div>
+                <ul id="reminderList" class="mt-3 space-y-2 divide-y divide-amber-100 dark:divide-amber-900/30 text-xs text-slate-700 dark:text-slate-300"></ul>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-center shadow-xs">
+                    <span class="text-xs text-slate-400 font-semibold block mb-1">Pending</span>
+                    <span id="statPending" class="text-xl font-bold text-amber-500">0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-center shadow-xs">
+                    <span class="text-xs text-slate-400 font-semibold block mb-1">Active</span>
+                    <span id="statActive" class="text-xl font-bold text-indigo-500">0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-center shadow-xs">
+                    <span class="text-xs text-slate-400 font-semibold block mb-1">Done</span>
+                    <span id="statDone" class="text-xl font-bold text-emerald-500">0</span>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                    <h2 class="text-base font-bold">Status Distribution</h2>
+                </div>
+                <div class="w-full max-w-[180px] mx-auto">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm w-full overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                        <h2 class="text-sm font-bold" id="calendarMonthYear"></h2>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="changeMonth(-1)" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <button onclick="changeMonth(1)" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 mb-2">
+                    <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
+                </div>
+                <div id="calendarDays" class="grid grid-cols-7 gap-1 text-xs"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="calendarModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 max-w-md w-full rounded-2xl p-6 relative shadow-xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 id="modalDateHeader" class="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400"></h3>
+            <div id="modalTasksList" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const STORAGE_KEY = 'backlog-tracker-v4';
-    const REMINDER_PRESETS = [7, 3, 1, 0];
-    let editingId = null;
-    let calendarDate = new Date();
-    let selectedCalendarDate = null;
-    let calendarPanelOpen = false;
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('backlog_tasks')) || [];
+        let reminders = JSON.parse(localStorage.getItem('school_reminders')) || [];
+        let currentFilter = 'all';
+        let chartInstance = null;
+        let currentDate = new Date();
 
-    const state = {
-      items: [],
-      reminders: REMINDER_PRESETS.slice(),
-      search: '',
-      filters: { category: '', priority: '', status: '' }
-    };
-
-    const elements = {
-      form: document.getElementById('backlogForm'),
-      formTitle: document.getElementById('formTitle'),
-      submitBtn: document.getElementById('submitBtn'),
-      resetBtn: document.getElementById('resetBtn'),
-      title: document.getElementById('title'),
-      description: document.getElementById('description'),
-      category: document.getElementById('category'),
-      priority: document.getElementById('priority'),
-      status: document.getElementById('status'),
-      dueAt: document.getElementById('dueAt'),
-      reminderChips: document.getElementById('reminderChips'),
-      notifyBtn: document.getElementById('notifyBtn'),
-      exportBtn: document.getElementById('exportBtn'),
-      importFile: document.getElementById('importFile'),
-      themeToggle: document.getElementById('themeToggle'),
-      searchInput: document.getElementById('searchInput'),
-      filterCategory: document.getElementById('filterCategory'),
-      filterPriority: document.getElementById('filterPriority'),
-      filterStatus: document.getElementById('filterStatus'),
-      backlogList: document.getElementById('backlogList'),
-      metricTotal: document.getElementById('metricTotal'),
-      metricPending: document.getElementById('metricPending'),
-      metricProgress: document.getElementById('metricProgress'),
-      metricCompleted: document.getElementById('metricCompleted'),
-      prevMonth: document.getElementById('prevMonth'),
-      nextMonth: document.getElementById('nextMonth'),
-      calendar: document.getElementById('calendar'),
-      calendarLabel: document.getElementById('calendarLabel'),
-      calendarLayout: document.getElementById('calendarLayout'),
-      calendarSide: document.getElementById('calendarSide'),
-      calendarDetails: document.getElementById('calendarDetails'),
-      calendarDetailsTitle: document.getElementById('calendarDetailsTitle'),
-      calendarDetailsMeta: document.getElementById('calendarDetailsMeta'),
-      toggleCalendarTasks: document.getElementById('toggleCalendarTasks'),
-      closeCalendarTasks: document.getElementById('closeCalendarTasks'),
-      reports: document.getElementById('reports')
-    };
-
-    function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
-    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items)); }
-    function loadState() {
-      try { state.items = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-      catch { state.items = []; }
-    }
-    function escapeHtml(value) {
-      return String(value || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-    function formatDateTime(v) {
-      if (!v) return '-';
-      return new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(v));
-    }
-    function sameDay(a, b) {
-      return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-    }
-    function getStatusRank(status) { return ({ 'Pending': 0, 'In Progress': 1, 'Completed': 2 })[status] ?? 99; }
-    function getPriorityRank(priority) { return ({ 'High': 0, 'Medium': 1, 'Low': 2 })[priority] ?? 99; }
-    function sortItems(items) {
-      return [...items].sort((a, b) => {
-        const s = getStatusRank(a.status) - getStatusRank(b.status);
-        if (s !== 0) return s;
-        const p = getPriorityRank(a.priority) - getPriorityRank(b.priority);
-        if (p !== 0) return p;
-        return new Date(a.dueAt) - new Date(b.dueAt);
-      });
-    }
-    function getFilteredItems() {
-      const q = state.search.toLowerCase().trim();
-      return sortItems(state.items.filter(item => {
-        const titleOk = item.title.toLowerCase().includes(q);
-        const categoryOk = !state.filters.category || item.category.toLowerCase().includes(state.filters.category.toLowerCase());
-        const priorityOk = !state.filters.priority || item.priority === state.filters.priority;
-        const statusOk = !state.filters.status || item.status === state.filters.status;
-        return titleOk && categoryOk && priorityOk && statusOk;
-      }));
-    }
-    function setCalendarPanel(open) {
-      calendarPanelOpen = open && !!selectedCalendarDate;
-      elements.calendarSide.hidden = !calendarPanelOpen;
-      elements.calendarLayout.classList.toggle('compact', !calendarPanelOpen);
-      elements.toggleCalendarTasks.hidden = !selectedCalendarDate;
-      elements.toggleCalendarTasks.textContent = calendarPanelOpen ? 'Hide Tasks' : 'Show Tasks';
-    }
-    function renderReminderChips(active = REMINDER_PRESETS) {
-      state.reminders = [...active];
-      elements.reminderChips.innerHTML = REMINDER_PRESETS.map(v => {
-        const label = v === 0 ? 'At time' : `${v} day${v > 1 ? 's' : ''} before`;
-        return `<button type="button" class="chip ${active.includes(v) ? 'active' : ''}" data-value="${v}">${label}</button>`;
-      }).join('');
-      elements.reminderChips.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', () => {
-        const value = Number(chip.dataset.value);
-        const set = new Set(state.reminders);
-        set.has(value) ? set.delete(value) : set.add(value);
-        renderReminderChips([...set].sort((a, b) => b - a));
-      }));
-    }
-    function resetForm() {
-      editingId = null;
-      elements.form.reset();
-      elements.formTitle.textContent = 'Add Backlog';
-      elements.submitBtn.textContent = 'Save Backlog';
-      elements.priority.value = 'Medium';
-      elements.status.value = 'Pending';
-      const dt = new Date(); dt.setHours(dt.getHours() + 2); dt.setMinutes(0,0,0);
-      elements.dueAt.value = new Date(dt.getTime() - dt.getTimezoneOffset()*60000).toISOString().slice(0,16);
-      renderReminderChips([7,3,1,0]);
-    }
-    function editItem(id) {
-      const item = state.items.find(i => i.id === id);
-      if (!item) return;
-      editingId = id;
-      elements.formTitle.textContent = 'Edit Backlog';
-      elements.submitBtn.textContent = 'Update Backlog';
-      elements.title.value = item.title;
-      elements.description.value = item.description || '';
-      elements.category.value = item.category || '';
-      elements.priority.value = item.priority;
-      elements.status.value = item.status;
-      elements.dueAt.value = item.dueAt.slice(0,16);
-      renderReminderChips(item.reminders || [7,3,1,0]);
-      document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(() => elements.title.focus(), 250);
-      refresh();
-    }
-    function cycleStatus(id) {
-      const item = state.items.find(i => i.id === id);
-      if (!item) return;
-      item.status = item.status === 'Pending' ? 'In Progress' : item.status === 'In Progress' ? 'Completed' : 'Pending';
-      saveState(); refresh();
-    }
-    function deleteItem(id) {
-      state.items = state.items.filter(i => i.id !== id);
-      saveState(); refresh();
-    }
-    window.editItem = editItem;
-    window.cycleStatus = cycleStatus;
-    window.deleteItem = deleteItem;
-
-    function renderItemCard(item, completedSection = false) {
-      const overdue = item.status !== 'Completed' && new Date(item.dueAt) < new Date();
-      return `
-        <article class="item ${item.status === 'Completed' ? 'completed' : ''} ${editingId === item.id ? 'active-edit' : ''}">
-          <div>
-            <h3>${escapeHtml(item.title)}</h3>
-            <div class="meta">${escapeHtml(item.category || 'General')} • Due ${formatDateTime(item.dueAt)}</div>
-            <p class="desc">${escapeHtml(item.description || 'No description added.')}</p>
-            <div class="tags">
-              <span class="tag priority-${item.priority}">${item.priority} priority</span>
-              <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
-              ${overdue ? '<span class="tag priority-High">Overdue</span>' : ''}
-              ${completedSection ? '<span class="tag status-Completed">Completed section</span>' : ''}
-            </div>
-          </div>
-          <div class="inline-buttons">
-            <button class="btn-soft small" onclick="editItem('${item.id}')">Edit</button>
-            <button class="btn-soft small" onclick="cycleStatus('${item.id}')">Status</button>
-            <button class="btn-danger small" onclick="deleteItem('${item.id}')">Delete</button>
-          </div>
-        </article>
-      `;
-    }
-    function renderList() {
-      const items = getFilteredItems();
-      if (!items.length) {
-        elements.backlogList.innerHTML = '<div class="empty">No backlog items match your current filters.</div>';
-        return;
-      }
-      const activeItems = items.filter(i => i.status !== 'Completed');
-      const completedItems = items.filter(i => i.status === 'Completed');
-      elements.backlogList.innerHTML = `
-        <div class="section-block">${activeItems.length ? activeItems.map(i => renderItemCard(i)).join('') : '<div class="empty">No active tasks match your current filters.</div>'}</div>
-        ${completedItems.length ? `<div class="section-divider"><h3>Completed Tasks</h3><p class="completed-copy">Finished items stay here below active work.</p></div><div class="section-block">${completedItems.map(i => renderItemCard(i, true)).join('')}</div>` : ''}
-      `;
-    }
-    function renderMetrics() {
-      elements.metricTotal.textContent = state.items.length;
-      elements.metricPending.textContent = state.items.filter(i => i.status === 'Pending').length;
-      elements.metricProgress.textContent = state.items.filter(i => i.status === 'In Progress').length;
-      elements.metricCompleted.textContent = state.items.filter(i => i.status === 'Completed').length;
-    }
-    function renderCalendarDetails(day) {
-      const items = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
-      elements.calendarDetailsTitle.textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long' }).format(day);
-      elements.calendarDetailsMeta.textContent = items.length ? `${items.length} task${items.length === 1 ? '' : 's'} scheduled` : 'No tasks scheduled for this date.';
-      elements.calendarDetails.innerHTML = items.length ? items.map(item => `
-        <article class="calendar-task">
-          <h4>${escapeHtml(item.title)}</h4>
-          <div class="tags">
-            <span class="tag priority-${item.priority}">${item.priority}</span>
-            <span class="tag status-${item.status.replaceAll(' ', '\\ ')}">${item.status}</span>
-          </div>
-          <div class="mini">Due: ${formatDateTime(item.dueAt)}</div>
-        </article>
-      `).join('') : '<div class="empty" style="padding:14px;">No tasks planned for the selected date.</div>';
-    }
-    function renderCalendar() {
-      const year = calendarDate.getFullYear();
-      const month = calendarDate.getMonth();
-      elements.calendarLabel.textContent = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(calendarDate);
-      const firstDay = new Date(year, month, 1);
-      const start = new Date(firstDay);
-      start.setDate(1 - ((firstDay.getDay() + 6) % 7));
-      const names = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-      const cells = names.map(n => `<div class="day-name">${n}</div>`);
-      for (let i = 0; i < 42; i++) {
-        const day = new Date(start);
-        day.setDate(start.getDate() + i);
-        const items = sortItems(state.items.filter(item => sameDay(new Date(item.dueAt), day)));
-        const dots = items.slice(0,4).map(item => {
-          const color = item.status === 'Completed' ? 'var(--success)' : new Date(item.dueAt) < new Date() ? 'var(--danger)' : 'var(--primary)';
-          return `<span class="dot" style="background:${color}"></span>`;
-        }).join('');
-        cells.push(`
-          <button type="button" class="day ${day.getMonth() !== month ? 'muted' : ''} ${sameDay(day, new Date()) ? 'today' : ''} ${selectedCalendarDate && sameDay(day, selectedCalendarDate) ? 'selected' : ''}" data-date="${day.toISOString()}">
-            <strong>${day.getDate()}</strong>
-            <div class="day-count">${items.length ? `${items.length} task${items.length === 1 ? '' : 's'}` : 'No tasks'}</div>
-            <div class="dots">${dots}</div>
-          </button>
-        `);
-      }
-      elements.calendar.innerHTML = cells.join('');
-      elements.calendar.querySelectorAll('.day[data-date]').forEach(button => {
-        button.addEventListener('click', () => {
-          selectedCalendarDate = new Date(button.dataset.date);
-          renderCalendarDetails(selectedCalendarDate);
-          setCalendarPanel(true);
-          renderCalendar();
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        }
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
         });
-      });
-      if (selectedCalendarDate) renderCalendarDetails(selectedCalendarDate);
-      setCalendarPanel(calendarPanelOpen);
-    }
-    function renderReports() {
-      const active = sortItems(state.items.filter(i => i.status !== 'Completed')).slice(0, 3);
-      const overdue = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) < new Date());
-      const upcoming = state.items.filter(i => i.status !== 'Completed' && new Date(i.dueAt) >= new Date()).sort((a,b) => new Date(a.dueAt) - new Date(b.dueAt)).slice(0,3);
-      elements.reports.innerHTML = `
-        <div class="report"><strong>Overdue:</strong> ${overdue.length}</div>
-        <div class="report"><strong>Priority Focus:</strong> ${active.length ? active.map(i => escapeHtml(i.title)).join(', ') : 'No active tasks'}</div>
-        <div class="report"><strong>Upcoming:</strong> ${upcoming.length ? upcoming.map(i => `${escapeHtml(i.title)} (${formatDateTime(i.dueAt)})`).join(' • ') : 'Nothing upcoming'}</div>
-      `;
-    }
-    function refresh() {
-      renderMetrics();
-      renderList();
-      renderCalendar();
-      renderReports();
-    }
-    function exportBackup() {
-      const blob = new Blob([JSON.stringify(state.items, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'backlog-tracker-backup.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-    function importBackup(file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          if (!Array.isArray(data)) throw new Error('Invalid backup');
-          state.items = data;
-          saveState(); refresh();
-        } catch { alert('Could not import backup file.'); }
-      };
-      reader.readAsText(file);
-    }
-    function seedDemoIfEmpty() {
-      if (state.items.length) return;
-      const now = new Date();
-      const mk = (title, d, priority, status, category) => ({
-        id: uid(), title, description: '', category, priority, status,
-        dueAt: new Date(now.getTime() + d*86400000).toISOString().slice(0,16), reminders: [3,1,0]
-      });
-      state.items = [
-        mk('Prepare weekly report', 1, 'High', 'Pending', 'Work'),
-        mk('Follow up client changes', 2, 'Medium', 'In Progress', 'Work'),
-        mk('Review notes', -1, 'Low', 'Completed', 'Study')
-      ];
-      saveState();
-    }
 
-    elements.form.addEventListener('submit', e => {
-      e.preventDefault();
-      const item = {
-        id: editingId || uid(),
-        title: elements.title.value.trim(),
-        description: elements.description.value.trim(),
-        category: elements.category.value.trim(),
-        priority: elements.priority.value,
-        status: elements.status.value,
-        dueAt: elements.dueAt.value,
-        reminders: [...state.reminders]
-      };
-      if (!item.title || !item.dueAt) return;
-      if (editingId) {
-        const i = state.items.findIndex(x => x.id === editingId);
-        if (i >= 0) state.items[i] = item;
-      } else {
-        state.items.push(item);
-      }
-      saveState();
-      resetForm();
-      refresh();
-      document.getElementById('backlogList').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    elements.resetBtn.addEventListener('click', resetForm);
-    elements.searchInput.addEventListener('input', e => { state.search = e.target.value; renderList(); });
-    elements.filterCategory.addEventListener('input', e => { state.filters.category = e.target.value; renderList(); });
-    elements.filterPriority.addEventListener('change', e => { state.filters.priority = e.target.value; renderList(); });
-    elements.filterStatus.addEventListener('change', e => { state.filters.status = e.target.value; renderList(); });
-    elements.prevMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
-    elements.nextMonth.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
-    elements.toggleCalendarTasks.addEventListener('click', () => setCalendarPanel(!calendarPanelOpen));
-    elements.closeCalendarTasks.addEventListener('click', () => setCalendarPanel(false));
-    elements.exportBtn.addEventListener('click', exportBackup);
-    elements.importFile.addEventListener('change', e => e.target.files[0] && importBackup(e.target.files[0]));
-    elements.themeToggle.addEventListener('click', () => {
-      document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-    });
-    elements.notifyBtn.addEventListener('click', async () => {
-      if (!('Notification' in window)) return alert('Notifications are not supported in this browser.');
-      const res = await Notification.requestPermission();
-      alert(res === 'granted' ? 'Notifications enabled.' : 'Notification permission not granted.');
-    });
+        document.getElementById('backlogForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const subject = document.getElementById('taskSubject').value;
+            const date = document.getElementById('taskDate').value;
+            const priority = parseInt(document.getElementById('taskPriority').value);
+            const details = document.getElementById('taskDetails').value;
 
-    loadState();
-    seedDemoIfEmpty();
-    resetForm();
-    refresh();
-  </script>
+            tasks.push({ id: Date.now().toString(), subject, date, priority, details, status: 'Pending' });
+            sortTasks();
+            saveAndRender();
+            document.getElementById('backlogForm').reset();
+        });
+
+        function sortTasks() {
+            tasks.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                if (dateA - dateB !== 0) return dateA - dateB;
+                return b.priority - a.priority;
+            });
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('backlog_tasks', JSON.stringify(tasks));
+            localStorage.setItem('school_reminders', JSON.stringify(reminders));
+            renderTasks();
+            updateStats();
+            renderCalendar();
+            renderReminders();
+            lucide.createIcons();
+        }
+
+        function filterTasks(status) {
+            currentFilter = status;
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-xs', 'text-slate-800', 'text-white');
+                tab.classList.add('text-slate-500', 'dark:text-slate-400');
+            });
+            event.target.classList.add('bg-white', 'dark:bg-slate-700', 'shadow-xs', 'text-slate-800', 'text-white');
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const desktopTbody = document.getElementById('backlogTableBodyDesktop');
+            const mobileContainer = document.getElementById('backlogMobileContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            desktopTbody.innerHTML = '';
+            mobileContainer.innerHTML = '';
+
+            const filtered = tasks.filter(t => currentFilter === 'all' || t.status === currentFilter);
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            filtered.forEach(task => {
+                let badgeColor = "bg-amber-500/10 text-amber-600 dark:text-amber-400";
+                if (task.status === 'In Progress') badgeColor = "bg-blue-500/10 text-blue-600 dark:text-blue-400";
+                if (task.status === 'Completed') badgeColor = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+
+                let priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🌱 Low</span>`;
+                if (task.priority === 2) priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400">⚡ Med</span>`;
+                if (task.priority === 3) priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400">🔥 High</span>`;
+
+                // 1. Desktop Row View
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-4 px-3 font-bold text-slate-950 dark:text-white">${task.subject}</td>
+                    <td class="py-4 px-3">${priorityBadge}</td>
+                    <td class="py-4 px-3 text-slate-500 dark:text-slate-400 max-w-sm break-words">${task.details || '-'}</td>
+                    <td class="py-4 px-3 text-xs font-medium text-slate-500 dark:text-slate-400">${task.date}</td>
+                    <td class="py-4 px-3">
+                        <select onchange="updateTaskStatus('${task.id}', this.value)" class="text-xs font-bold rounded-xl px-3 py-1.5 bg-transparent border-0 cursor-pointer focus:ring-2 focus:ring-indigo-500/20 ${badgeColor}">
+                            <option value="Pending" ${task.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>Active</option>
+                            <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Done</option>
+                        </select>
+                    </td>
+                    <td class="py-4 px-3 text-right">
+                        <button onclick="deleteTask('${task.id}')" class="p-1.5 rounded-xl text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                `;
+                desktopTbody.appendChild(tr);
+
+                // 2. Mobile Card View (Vertical format with Row Headings)
+                const card = document.createElement('div');
+                card.className = "p-4 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/20 space-y-2.5 relative";
+                card.innerHTML = `
+                    <div class="absolute top-3 right-3">
+                        <button onclick="deleteTask('${task.id}')" class="p-1 rounded-lg text-rose-500 hover:bg-rose-500/10"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1 border-b border-slate-100 dark:border-slate-800/60 pb-1.5">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Subject:</span>
+                        <span class="col-span-2 text-sm font-bold text-slate-900 dark:text-white break-words">${task.subject}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1 items-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Priority:</span>
+                        <span class="col-span-2">${priorityBadge}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Details:</span>
+                        <span class="col-span-2 text-xs text-slate-600 dark:text-slate-300 break-words">${task.details || '-'}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Due Date:</span>
+                        <span class="col-span-2 text-xs font-semibold text-slate-500">${task.date}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1 items-center pt-1">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Status:</span>
+                        <span class="col-span-2">
+                            <select onchange="updateTaskStatus('${task.id}', this.value)" class="text-xs font-bold rounded-xl px-2 py-1 bg-transparent border-0 cursor-pointer ${badgeColor}">
+                                <option value="Pending" ${task.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>Active</option>
+                                <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Done</option>
+                            </select>
+                        </span>
+                    </div>
+                `;
+                mobileContainer.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function updateTaskStatus(id, newStatus) {
+            tasks = tasks.map(t => t.id === id ? {...t, status: newStatus} : t);
+            saveAndRender();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveAndRender();
+        }
+
+        function updateStats() {
+            const counts = { Pending: 0, 'In Progress': 0, Completed: 0 };
+            tasks.forEach(t => { if(counts[t.status] !== undefined) counts[t.status]++; });
+            document.getElementById('statPending').innerText = counts.Pending;
+            document.getElementById('statActive').innerText = counts['In Progress'];
+            document.getElementById('statDone').innerText = counts.Completed;
+
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Active', 'Done'],
+                    datasets: [{ data: [counts.Pending, counts['In Progress'], counts.Completed], backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'], borderWidth: 0 }]
+                },
+                options: { plugins: { legend: { display: false } }, cutout: '75%' }
+            });
+        }
+
+        function addReminder() {
+            const val = document.getElementById('reminderInput').value.trim();
+            if(!val) return;
+            reminders.push({ id: Date.now().toString(), text: val });
+            document.getElementById('reminderInput').value = '';
+            saveAndRender();
+        }
+        function deleteReminder(id) {
+            reminders = reminders.filter(r => r.id !== id);
+            saveAndRender();
+        }
+        function renderReminders() {
+            const list = document.getElementById('reminderList');
+            list.innerHTML = '';
+            if(reminders.length === 0) {
+                list.innerHTML = `<li class="text-slate-400 italic text-[11px] py-1">No items slated for school delivery.</li>`;
+                return;
+            }
+            reminders.forEach(r => {
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between py-1.5 gap-2";
+                li.innerHTML = `<span class="break-words max-w-[85%] font-medium text-amber-950 dark:text-amber-200">${r.text}</span><button onclick="deleteReminder('${r.id}')" class="text-rose-500 p-0.5 cursor-pointer"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i></button>`;
+                list.appendChild(li);
+            });
+        }
+
+        function changeMonth(direction) { currentDate.setMonth(currentDate.getMonth() + direction); renderCalendar(); }
+        function renderCalendar() {
+            const label = document.getElementById('calendarMonthYear');
+            const grid = document.getElementById('calendarDays');
+            grid.innerHTML = '';
+            const y = currentDate.getFullYear(), m = currentDate.getMonth();
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            label.innerText = `${months[m]} ${y}`;
+
+            const start = new Date(y, m, 1).getDay();
+            const total = new Date(y, m + 1, 0).getDate();
+
+            for (let i = 0; i < start; i++) { grid.appendChild(document.createElement('span')); }
+            for (let d = 1; d <= total; d++) {
+                const dStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const mTasks = tasks.filter(t => t.date === dStr);
+                const btn = document.createElement('button');
+                btn.className = "aspect-square flex flex-col items-center justify-between p-1 rounded-xl relative border border-slate-100 dark:border-slate-800/40 bg-slate-50 dark:bg-slate-800/30 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 w-full cursor-pointer";
+                btn.onclick = () => showDayTasks(dStr, mTasks);
+                btn.innerHTML = `<span class="text-[10px] sm:text-xs font-bold">${d}</span>`;
+                if(mTasks.length > 0) {
+                    const dots = document.createElement('div'); dots.className = "flex flex-wrap justify-center gap-0.5 max-w-full pb-0.5";
+                    mTasks.slice(0,3).forEach(t => {
+                        const dot = document.createElement('span'); dot.className = `w-1 h-1 rounded-full block ${t.status==='Pending'?'bg-amber-500':t.status==='In Progress'?'bg-blue-500':'bg-emerald-500'}`;
+                        dots.appendChild(dot);
+                    });
+                    btn.appendChild(dots);
+                }
+                grid.appendChild(btn);
+            }
+        }
+
+        function showDayTasks(dateStr, dayTasks) {
+            const modal = document.getElementById('calendarModal');
+            const list = document.getElementById('modalTasksList');
+            document.getElementById('modalDateHeader').innerText = `Tasks Due On ${dateStr}`;
+            list.innerHTML = '';
+            if(dayTasks.length === 0) list.innerHTML = `<p class="text-sm text-slate-400 italic py-4 text-center">No tasks assigned.</p>`;
+            else {
+                dayTasks.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = "p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800";
+                    item.innerHTML = `<div class="flex items-center justify-between gap-2 mb-1"><span class="font-bold text-sm">${t.subject}</span><span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-700">${t.priority===3?'High':t.priority===2?'Med':'Low'}</span></div><p class="text-xs text-slate-500">${t.details || '-'}</p>`;
+                    list.appendChild(item);
+                });
+            }
+            modal.classList.remove('hidden'); lucide.createIcons();
+        }
+        function closeModal() { document.getElementById('calendarModal').classList.add('hidden'); }
+
+        function exportData() {
+            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, reminders }));
+            const a = document.createElement('a'); a.setAttribute("href", str); a.setAttribute("download", `backlog_tracker_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(a); a.click(); a.remove();
+        }
+        function importData(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const r = new FileReader(); r.onload = function(evt) {
+                try {
+                    const parsed = JSON.parse(evt.target.result);
+                    if (parsed.tasks || parsed.reminders) {
+                        tasks = parsed.tasks || []; reminders = parsed.reminders || [];
+                        sortTasks(); saveAndRender(); alert("Data imported successfully!");
+                    }
+                } catch(err) { alert("Error parsing file."); }
+            }; r.readAsText(file);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => { sortTasks(); saveAndRender(); });
+    </script>
 </body>
 </html>
