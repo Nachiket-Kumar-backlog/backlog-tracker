@@ -3,55 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backlog Tracker & Consistency Monitor</title>
+    <title>Backlog Tracker & Dynamic Calendar</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* 100% Guaranteed Native Dark Mode Fallback */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
         }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        html.dark-forced {
+            --bg-main: #020617;
+            --bg-card: #0f172a;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #e5e7eb;
-            border-radius: 4px;
-        }
+        
+        /* Custom Overrides for bulletproof execution */
+        .theme-bg { background-color: var(--bg-main) !important; color: var(--text-main) !important; }
+        .theme-card { background-color: var(--bg-card) !important; border-color: var(--border-color) !important; }
+        .theme-text { color: var(--text-main) !important; }
+        .theme-text-muted { color: var(--text-muted) !important; }
+        .theme-border { border-color: var(--border-color) !important; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 min-h-screen pb-12">
+<body class="theme-bg transition-colors duration-200 min-h-screen pb-24">
 
-    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 dark:bg-indigo-500 text-white p-2.5 rounded-xl shadow-md shadow-indigo-500/20">
-                    <i data-lucide="check-square" class="w-6 h-6"></i>
+    <header class="border-b theme-border bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-40 px-4 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md flex items-center justify-center">
+                    <i data-lucide="check-square" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight">Backlog Tracker Pro</h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Monitor Your Consistency & Priorities</p>
+                    <h1 class="text-lg md:text-2xl font-bold tracking-tight leading-tight theme-text">Backlog Tracker</h1>
+                    <p class="text-[10px] md:text-xs theme-text-muted">Manage Tasks & Events</p>
                 </div>
             </div>
             
-            <div class="flex flex-wrap items-center gap-3">
-                <button onclick="exportData()" class="px-3 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs">
-                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Data
-                </button>
-                <label class="px-3 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs">
-                    <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import Data
+            <div class="flex items-center gap-1.5 md:gap-3">
+                <button onclick="exportData()" class="px-2 py-1.5 md:px-3 md:py-2 text-[11px] font-semibold bg-emerald-600 text-white rounded-xl flex items-center gap-1 cursor-pointer shadow-xs"><i data-lucide="download" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Export</span></button>
+                <label class="px-2 py-1.5 md:px-3 md:py-2 text-[11px] font-semibold bg-blue-600 text-white rounded-xl flex items-center gap-1 cursor-pointer shadow-xs">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Import</span>
                     <input type="file" id="importFile" accept="*/*" onchange="importData(event)" class="hidden">
                 </label>
-                <button id="themeToggle" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-300 cursor-pointer">
+                
+                <button id="themeToggle" class="p-2 rounded-xl border theme-border bg-slate-100 dark:bg-slate-800 text-amber-500 dark:text-indigo-400 hover:scale-105 transition-transform cursor-pointer flex items-center justify-center w-9 h-9" title="Toggle Light/Dark Theme">
                     <i data-lucide="sun" id="sunIcon" class="w-5 h-5 hidden"></i>
                     <i data-lucide="moon" id="moonIcon" class="w-5 h-5"></i>
                 </button>
@@ -59,208 +64,284 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <div class="lg:col-span-2 space-y-8">
-            
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-                <div class="flex items-center gap-2 mb-4">
-                    <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-                    <h2 class="text-lg font-bold">Add New Backlog Task</h2>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-6">
+
+        <div id="backlogViewSection" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="theme-card border rounded-2xl p-6 shadow-xs">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-600"></i>
+                        <h2 class="text-lg font-bold theme-text" id="formTitle">Add New Backlog Task</h2>
+                    </div>
+                    
+                    <form id="backlogForm" class="space-y-4">
+                        <input type="hidden" id="editTaskId" value="">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold theme-text-muted">Subject / Topic</label>
+                                <input type="text" id="taskSubject" required placeholder="Physics, Math..." class="w-full px-3.5 py-2 rounded-xl border theme-border bg-transparent text-sm focus:border-indigo-500 focus:outline-none theme-text">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold theme-text-muted">Target Due Date</label>
+                                <input type="date" id="taskDate" required class="w-full px-3.5 py-2 rounded-xl border theme-border bg-transparent text-sm focus:border-indigo-500 focus:outline-none theme-text">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold theme-text-muted">Priority Level</label>
+                                <select id="taskPriority" required class="w-full px-3.5 py-2 rounded-xl border theme-border bg-transparent text-sm focus:border-indigo-500 focus:outline-none cursor-pointer theme-text">
+                                    <option value="3" class="text-slate-900">🔥 High Priority</option>
+                                    <option value="2" selected class="text-slate-900">⚡ Medium Priority</option>
+                                    <option value="1" class="text-slate-900">🌱 Low Priority</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold theme-text-muted">Task Details</label>
+                            <textarea id="taskDetails" rows="2" placeholder="Write comprehensive details..." class="w-full px-3.5 py-2 rounded-xl border theme-border bg-transparent text-sm focus:border-indigo-500 focus:outline-none resize-none theme-text"></textarea>
+                        </div>
+                        <button type="submit" id="submitTaskBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add Sorted Backlog
+                        </button>
+                    </form>
                 </div>
-                
-                <form id="backlogForm" class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="space-y-1">
-                            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Subject / Topic</label>
-                            <input type="text" id="taskSubject" required placeholder="Physics, Math, Project..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Target Due Date</label>
-                            <input type="date" id="taskDate" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Priority Level</label>
-                            <select id="taskPriority" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm cursor-pointer">
-                                <option value="3">🔥 High Priority</option>
-                                <option value="2" selected>⚡ Medium Priority</option>
-                                <option value="1">🌱 Low Priority</option>
-                            </select>
+
+                <div class="theme-card border rounded-2xl p-6 shadow-xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2 theme-text"><i data-lucide="list-todo" class="text-indigo-600"></i> Your Sorted Backlogs</h2>
+                        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium overflow-x-auto">
+                            <button onclick="filterTasks('all')" class="filter-tab px-4 py-2 rounded-lg bg-indigo-600 text-white shadow-xs transition-all cursor-pointer">All Items</button>
+                            <button onclick="filterTasks('Pending')" class="filter-tab px-4 py-2 rounded-lg theme-text-muted transition-all cursor-pointer">Pending</button>
+                            <button onclick="filterTasks('In Progress')" class="filter-tab px-4 py-2 rounded-lg theme-text-muted transition-all cursor-pointer">Active</button>
+                            <button onclick="filterTasks('Completed')" class="filter-tab px-4 py-2 rounded-lg theme-text-muted transition-all cursor-pointer">Done</button>
                         </div>
                     </div>
-                    <div class="space-y-1">
-                        <label class="text-xs font-semibold text-slate-500 dark:text-slate-400">Task Details</label>
-                        <textarea id="taskDetails" rows="2" placeholder="Write comprehensive details about the backlog topic here..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm resize-none"></textarea>
+
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="min-w-full text-left text-sm">
+                            <thead>
+                                <tr class="theme-text-muted font-semibold text-xs uppercase border-b theme-border">
+                                    <th class="pb-4 px-3">Subject</th>
+                                    <th class="pb-4 px-3">Priority</th>
+                                    <th class="pb-4 px-3">Details</th>
+                                    <th class="pb-4 px-3">Due Date</th>
+                                    <th class="pb-4 px-3">Status</th>
+                                    <th class="pb-4 px-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backlogTableBodyDesktop" class="divide-y theme-border"></tbody>
+                        </table>
                     </div>
-                    <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-md shadow-indigo-600/10 transition-all text-sm flex items-center justify-center gap-2 cursor-pointer">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Add Sorted Backlog
-                    </button>
-                </form>
+
+                    <div id="backlogMobileContainer" class="block md:hidden space-y-4"></div>
+                    <div id="emptyState" class="hidden text-center py-12 theme-text-muted"><p class="text-sm">No backlog items tracked!</p></div>
+                </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="list-todo" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-                        <h2 class="text-xl font-bold">Your Sorted Backlogs</h2>
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-5 shadow-xs">
+                    <h2 class="text-base font-bold text-amber-900 dark:text-amber-300 flex items-center gap-2 mb-3"><i data-lucide="bell" class="text-amber-600 animate-pulse"></i> Next-Day School Reminders</h2>
+                    <div class="space-y-2.5">
+                        <input type="text" id="reminderInput" placeholder="Bring Lab File, Project..." class="w-full px-3 py-1.5 rounded-xl border theme-border text-xs bg-white/80 dark:bg-slate-900/80 focus:outline-none theme-text">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase">Submission Due Date:</label>
+                            <input type="date" id="reminderDate" required class="w-full px-3 py-1.5 rounded-xl border theme-border text-xs bg-white/80 dark:bg-slate-900/80 focus:outline-none theme-text">
+                        </div>
+                        <button onclick="addReminder()" class="w-full py-1.5 bg-amber-600 text-white rounded-lg text-xs font-semibold cursor-pointer shadow-xs">Save Reminder</button>
                     </div>
-                    <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium overflow-x-auto">
-                        <button onclick="filterTasks('all')" class="filter-tab px-4 py-2 rounded-lg bg-white dark:bg-slate-700 shadow-xs text-slate-800 dark:text-white transition-all whitespace-nowrap cursor-pointer">All Items</button>
-                        <button onclick="filterTasks('Pending')" class="filter-tab px-4 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer">Pending</button>
-                        <button onclick="filterTasks('In Progress')" class="filter-tab px-4 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer">Active</button>
-                        <button onclick="filterTasks('Completed')" class="filter-tab px-4 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all whitespace-nowrap cursor-pointer">Done</button>
+                    <ul id="reminderList" class="mt-3 space-y-2 text-xs theme-text"></ul>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="theme-card border p-4 rounded-2xl text-center shadow-xs">
+                        <span class="text-[10px] theme-text-muted font-semibold block uppercase">Pending</span>
+                        <span id="statPending" class="text-xl font-bold text-amber-500">0</span>
+                    </div>
+                    <div class="theme-card border p-4 rounded-2xl text-center shadow-xs">
+                        <span class="text-[10px] theme-text-muted font-semibold block uppercase">Active</span>
+                        <span id="statActive" class="text-xl font-bold text-indigo-500">0</span>
+                    </div>
+                    <div class="theme-card border p-4 rounded-2xl text-center shadow-xs">
+                        <span class="text-[10px] theme-text-muted font-semibold block uppercase">Done</span>
+                        <span id="statDone" class="text-xl font-bold text-emerald-500">0</span>
                     </div>
                 </div>
 
-                <div class="hidden md:block overflow-x-auto">
-                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-left text-sm">
-                        <thead>
-                            <tr class="text-slate-400 font-semibold uppercase tracking-wider text-xs">
-                                <th class="pb-4 px-3">Subject / Topic</th>
-                                <th class="pb-4 px-3">Priority</th>
-                                <th class="pb-4 px-3">Comprehensive Details</th>
-                                <th class="pb-4 px-3">Due Date</th>
-                                <th class="pb-4 px-3">Status Dropdown</th>
-                                <th class="pb-4 px-3 text-right">Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody id="backlogTableBodyDesktop" class="divide-y divide-slate-100 dark:divide-slate-800/80">
-                            </tbody>
-                    </table>
-                </div>
-
-                <div id="backlogMobileContainer" class="block md:hidden space-y-4">
-                    </div>
-
-                <div id="emptyState" class="hidden text-center py-12 text-slate-400">
-                    <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
-                    <p class="text-base font-medium">No backlog items trackable!</p>
+                <div class="theme-card border rounded-2xl p-5 shadow-sm">
+                    <h2 class="text-sm font-bold mb-4 flex items-center gap-2 theme-text"><i data-lucide="pie-chart" class="text-indigo-600"></i> Status Distribution</h2>
+                    <div class="w-full max-w-[150px] mx-auto"><canvas id="analyticsChart"></canvas></div>
                 </div>
             </div>
         </div>
 
-        <div class="space-y-6">
-            <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-5 shadow-xs">
-                <div class="flex items-center gap-2 mb-3">
-                    <i data-lucide="bell" class="w-5 h-5 text-amber-600 dark:text-amber-400 animate-pulse"></i>
-                    <h2 class="text-base font-bold text-amber-900 dark:text-amber-300">Next-Day School Reminders</h2>
-                </div>
-                <div class="space-y-2">
-                    <input type="text" id="reminderInput" placeholder="Bring Lab File, Chemistry Book tomorrow..." class="w-full px-3 py-1.5 rounded-xl border border-amber-200 dark:border-amber-800/80 text-xs bg-white/80 dark:bg-slate-900/80 focus:outline-none focus:border-amber-500">
-                    <button onclick="addReminder()" class="w-full py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer">Save Reminder</button>
-                </div>
-                <ul id="reminderList" class="mt-3 space-y-2 divide-y divide-amber-100 dark:divide-amber-900/30 text-xs text-slate-700 dark:text-slate-300"></ul>
-            </div>
-
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-center shadow-xs">
-                    <span class="text-xs text-slate-400 font-semibold block mb-1">Pending</span>
-                    <span id="statPending" class="text-xl font-bold text-amber-500">0</span>
-                </div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-center shadow-xs">
-                    <span class="text-xs text-slate-400 font-semibold block mb-1">Active</span>
-                    <span id="statActive" class="text-xl font-bold text-indigo-500">0</span>
-                </div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-center shadow-xs">
-                    <span class="text-xs text-slate-400 font-semibold block mb-1">Done</span>
-                    <span id="statDone" class="text-xl font-bold text-emerald-500">0</span>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
-                <div class="flex items-center gap-2 mb-4">
-                    <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-                    <h2 class="text-base font-bold">Status Distribution</h2>
-                </div>
-                <div class="w-full max-w-[180px] mx-auto">
-                    <canvas id="analyticsChart"></canvas>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm w-full overflow-hidden">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="calendar" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-                        <h2 class="text-sm font-bold" id="calendarMonthYear"></h2>
+        <div id="calendarViewSection" class="hidden max-w-4xl mx-auto space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 theme-card border rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold flex items-center gap-2 theme-text"><i data-lucide="calendar" class="text-indigo-600"></i> Scheduled Map</h2>
+                        <div class="flex gap-1">
+                            <button onclick="changeMonth(-1)" class="p-1.5 rounded-lg border theme-border hover:bg-slate-100 dark:hover:bg-slate-800 theme-text cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <span class="text-sm font-bold min-w-[100px] text-center self-center theme-text" id="calendarMonthYear"></span>
+                            <button onclick="changeMonth(1)" class="p-1.5 rounded-lg border theme-border hover:bg-slate-100 dark:hover:bg-slate-800 theme-text cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        </div>
                     </div>
-                    <div class="flex gap-1">
-                        <button onclick="changeMonth(-1)" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                        <button onclick="changeMonth(1)" class="p-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold theme-text-muted mb-2">
+                        <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
                     </div>
+                    <div id="calendarDays" class="grid grid-cols-7 gap-2 text-xs"></div>
                 </div>
-                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 mb-2">
-                    <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
+
+                <div class="theme-card border rounded-2xl p-5 shadow-sm space-y-4">
+                    <h2 class="text-sm font-bold flex items-center gap-2 text-rose-500"><i data-lucide="gift"></i> Add Calendar Event</h2>
+                    <form id="calendarEventForm" class="space-y-3">
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-semibold theme-text-muted uppercase">Event / Name</label>
+                            <input type="text" id="eventTitle" required placeholder="Aman's Birthday..." class="w-full px-3 py-1.5 rounded-xl border theme-border bg-transparent text-xs focus:outline-none theme-text">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-semibold theme-text-muted uppercase">Event Date</label>
+                            <input type="date" id="eventDate" required class="w-full px-3 py-1.5 rounded-xl border theme-border bg-transparent text-xs focus:outline-none theme-text">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-semibold theme-text-muted uppercase">Category Type</label>
+                            <select id="eventCategory" class="w-full px-3 py-1.5 rounded-xl border theme-border bg-transparent text-xs focus:outline-none cursor-pointer theme-text">
+                                <option value="regular" class="text-slate-900">📌 Regular One-Time Task</option>
+                                <option value="birthday" class="text-slate-900">🎂 Birthday (Annually Reminded)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl text-xs cursor-pointer shadow-xs">Lock Calendar Event</button>
+                    </form>
                 </div>
-                <div id="calendarDays" class="grid grid-cols-7 gap-1 text-xs"></div>
+            </div>
+
+            <div class="theme-card border rounded-2xl p-5 shadow-sm">
+                <h3 class="text-sm font-bold text-rose-500 flex items-center gap-1.5 mb-3"><i data-lucide="cake"></i> Today's Annual Birthday Logs</h3>
+                <div id="annualAlertBox" class="space-y-2 text-xs"></div>
             </div>
         </div>
     </main>
 
     <div id="calendarModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 max-w-md w-full rounded-2xl p-6 relative shadow-xl">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <h3 id="modalDateHeader" class="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400"></h3>
+        <div class="theme-card border max-w-md w-full rounded-2xl p-6 relative shadow-xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 theme-text-muted hover:theme-text cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 id="modalDateHeader" class="text-lg font-bold mb-4 text-indigo-600"></h3>
             <div id="modalTasksList" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
         </div>
     </div>
 
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t theme-border py-2.5 z-50 shadow-lg">
+        <div class="max-w-md mx-auto flex justify-around items-center">
+            <button onclick="switchTab('backlogs')" id="tabBtnBacklogs" class="flex flex-col items-center gap-0.5 text-indigo-600 font-bold transition-all cursor-pointer">
+                <i data-lucide="layer-pattern" class="w-5 h-5"></i>
+                <span class="text-[11px]">Backlogs</span>
+            </button>
+            <button onclick="switchTab('calendar')" id="tabBtnCalendar" class="flex flex-col items-center gap-0.5 theme-text-muted font-medium transition-all cursor-pointer">
+                <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                <span class="text-[11px]">Calendar</span>
+            </button>
+        </div>
+    </nav>
+
     <script>
         let tasks = JSON.parse(localStorage.getItem('backlog_tasks')) || [];
         let reminders = JSON.parse(localStorage.getItem('school_reminders')) || [];
+        let calendarEvents = JSON.parse(localStorage.getItem('calendar_events')) || [];
+        
         let currentFilter = 'all';
         let chartInstance = null;
         let currentDate = new Date();
 
-        // Theme Toggle
+        // 100% BULLETPROOF GLOBAL DARK MODE LOGIC ENGINE
         const themeToggleBtn = document.getElementById('themeToggle');
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            sunIcon.classList.remove('hidden');
-            moonIcon.classList.add('hidden');
-        }
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            if (document.documentElement.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
+
+        function applyTheme() {
+            const isDark = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDark) {
+                document.documentElement.classList.add('dark-forced', 'dark');
                 sunIcon.classList.remove('hidden');
                 moonIcon.classList.add('hidden');
             } else {
-                localStorage.setItem('theme', 'light');
+                document.documentElement.classList.remove('dark-forced', 'dark');
                 sunIcon.classList.add('hidden');
                 moonIcon.classList.remove('hidden');
             }
+        }
+        applyTheme();
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark-forced')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+            applyTheme();
+            updateStats(); // Canvas colors dynamic reload
+            renderCalendar();
         });
 
+        // Tab Switching Layout Pipeline
+        function switchTab(target) {
+            const bLogSection = document.getElementById('backlogViewSection');
+            const calSection = document.getElementById('calendarViewSection');
+            const btnBacklogs = document.getElementById('tabBtnBacklogs');
+            const btnCalendar = document.getElementById('tabBtnCalendar');
+
+            if (target === 'backlogs') {
+                bLogSection.classList.remove('hidden');
+                calSection.classList.add('hidden');
+                btnBacklogs.className = "flex flex-col items-center gap-0.5 text-indigo-600 font-bold transition-all cursor-pointer";
+                btnCalendar.className = "flex flex-col items-center gap-0.5 theme-text-muted font-medium transition-all cursor-pointer";
+            } else {
+                bLogSection.classList.add('hidden');
+                calSection.classList.remove('hidden');
+                btnCalendar.className = "flex flex-col items-center gap-0.5 text-indigo-600 font-bold transition-all cursor-pointer";
+                btnBacklogs.className = "flex flex-col items-center gap-0.5 theme-text-muted font-medium transition-all cursor-pointer";
+                renderCalendar();
+                checkBirthdays();
+            }
+        }
+
+        // Backlog Creation
         document.getElementById('backlogForm').addEventListener('submit', (e) => {
             e.preventDefault();
+            const editId = document.getElementById('editTaskId').value;
             const subject = document.getElementById('taskSubject').value;
             const date = document.getElementById('taskDate').value;
             const priority = parseInt(document.getElementById('taskPriority').value);
             const details = document.getElementById('taskDetails').value;
 
-            tasks.push({ id: Date.now().toString(), subject, date, priority, details, status: 'Pending' });
+            if(editId) {
+                tasks = tasks.map(t => t.id === editId ? {...t, subject, date, priority, details} : t);
+                document.getElementById('editTaskId').value = '';
+                document.getElementById('formTitle').innerText = 'Add New Backlog Task';
+                document.getElementById('submitTaskBtn').innerHTML = `<i data-lucide="plus" class="w-4 h-4"></i> Add Sorted Backlog`;
+            } else {
+                tasks.push({ id: Date.now().toString(), subject, date, priority, details, status: 'Pending' });
+            }
             sortTasks();
             saveAndRender();
             document.getElementById('backlogForm').reset();
         });
 
         function sortTasks() {
+            const statusOrder = { 'Pending': 1, 'In Progress': 2, 'Completed': 3 };
             tasks.sort((a, b) => {
-                const dateA = new Date(a.date);
-                const dateB = new Date(b.date);
-                if (dateA - dateB !== 0) return dateA - dateB;
-                return b.priority - a.priority;
+                if (statusOrder[a.status] !== statusOrder[b.status]) {
+                    return statusOrder[a.status] - statusOrder[b.status];
+                }
+                if (b.priority !== a.priority) {
+                    return b.priority - a.priority;
+                }
+                return new Date(a.date) - new Date(b.date);
             });
         }
 
         function saveAndRender() {
             localStorage.setItem('backlog_tasks', JSON.stringify(tasks));
             localStorage.setItem('school_reminders', JSON.stringify(reminders));
+            localStorage.setItem('calendar_events', JSON.stringify(calendarEvents));
             renderTasks();
             updateStats();
-            renderCalendar();
             renderReminders();
             lucide.createIcons();
         }
@@ -268,11 +349,25 @@
         function filterTasks(status) {
             currentFilter = status;
             document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-xs', 'text-slate-800', 'text-white');
-                tab.classList.add('text-slate-500', 'dark:text-slate-400');
+                tab.className = "filter-tab px-4 py-2 rounded-lg theme-text-muted transition-all cursor-pointer";
             });
-            event.target.classList.add('bg-white', 'dark:bg-slate-700', 'shadow-xs', 'text-slate-800', 'text-white');
+            event.target.className = "filter-tab px-4 py-2 rounded-lg bg-indigo-600 text-white shadow-xs transition-all cursor-pointer";
             renderTasks();
+        }
+
+        function populateEditForm(id) {
+            const targeted = tasks.find(t => t.id === id);
+            if(!targeted) return;
+            document.getElementById('editTaskId').value = targeted.id;
+            document.getElementById('taskSubject').value = targeted.subject;
+            document.getElementById('taskDate').value = targeted.date;
+            document.getElementById('taskPriority').value = targeted.priority;
+            document.getElementById('taskDetails').value = targeted.details || '';
+
+            document.getElementById('formTitle').innerText = '✏️ Edit Scheduled Backlog';
+            document.getElementById('submitTaskBtn').innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i> Update Selected Task`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
         }
 
         function renderTasks() {
@@ -284,70 +379,68 @@
             mobileContainer.innerHTML = '';
 
             const filtered = tasks.filter(t => currentFilter === 'all' || t.status === currentFilter);
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
+            if (filtered.length === 0) { emptyState.classList.remove('hidden'); return; }
             emptyState.classList.add('hidden');
 
             filtered.forEach(task => {
-                let badgeColor = "bg-amber-500/10 text-amber-600 dark:text-amber-400";
-                if (task.status === 'In Progress') badgeColor = "bg-blue-500/10 text-blue-600 dark:text-blue-400";
-                if (task.status === 'Completed') badgeColor = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+                let badgeColor = "bg-amber-500/10 text-amber-600";
+                if (task.status === 'In Progress') badgeColor = "bg-blue-500/10 text-blue-600";
+                if (task.status === 'Completed') badgeColor = "bg-emerald-500/10 text-emerald-600";
 
-                let priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🌱 Low</span>`;
-                if (task.priority === 2) priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400">⚡ Med</span>`;
-                if (task.priority === 3) priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400">🔥 High</span>`;
+                let priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 theme-text">🌱 Low</span>`;
+                if (task.priority === 2) priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-950/40 text-orange-600">⚡ Med</span>`;
+                if (task.priority === 3) priorityBadge = `<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/40 text-rose-600">🔥 High</span>`;
 
-                // 1. Desktop Row View
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors";
+                tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors";
                 tr.innerHTML = `
-                    <td class="py-4 px-3 font-bold text-slate-950 dark:text-white">${task.subject}</td>
+                    <td class="py-4 px-3 font-bold theme-text">${task.subject}</td>
                     <td class="py-4 px-3">${priorityBadge}</td>
-                    <td class="py-4 px-3 text-slate-500 dark:text-slate-400 max-w-sm break-words">${task.details || '-'}</td>
-                    <td class="py-4 px-3 text-xs font-medium text-slate-500 dark:text-slate-400">${task.date}</td>
+                    <td class="py-4 px-3 theme-text-muted max-w-sm break-words">${task.details || '-'}</td>
+                    <td class="py-4 px-3 text-xs font-medium theme-text">${task.date}</td>
                     <td class="py-4 px-3">
-                        <select onchange="updateTaskStatus('${task.id}', this.value)" class="text-xs font-bold rounded-xl px-3 py-1.5 bg-transparent border-0 cursor-pointer focus:ring-2 focus:ring-indigo-500/20 ${badgeColor}">
+                        <select onchange="updateTaskStatus('${task.id}', this.value)" class="text-xs font-bold rounded-xl px-3 py-1.5 bg-transparent border theme-border cursor-pointer ${badgeColor}">
                             <option value="Pending" ${task.status === 'Pending' ? 'selected' : ''}>Pending</option>
                             <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>Active</option>
                             <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Done</option>
                         </select>
                     </td>
                     <td class="py-4 px-3 text-right">
-                        <button onclick="deleteTask('${task.id}')" class="p-1.5 rounded-xl text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <div class="flex items-center justify-end gap-1.5">
+                            <button onclick="populateEditForm('${task.id}')" class="p-1.5 rounded-xl text-blue-500 hover:bg-blue-500/10 cursor-pointer"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                            <button onclick="deleteTask('${task.id}')" class="p-1.5 rounded-xl text-rose-500 hover:bg-rose-500/10 cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
                     </td>
                 `;
                 desktopTbody.appendChild(tr);
 
-                // 2. Mobile Card View (Vertical format with Row Headings)
                 const card = document.createElement('div');
-                card.className = "p-4 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/20 space-y-2.5 relative";
+                card.className = "p-4 border theme-border rounded-xl theme-card space-y-2.5 relative shadow-xs";
                 card.innerHTML = `
-                    <div class="absolute top-3 right-3">
+                    <div class="absolute top-3 right-3 flex items-center gap-1">
+                        <button onclick="populateEditForm('${task.id}')" class="p-1 rounded-lg text-blue-500 hover:bg-blue-500/10"><i data-lucide="pencil" class="w-4 h-4"></i></button>
                         <button onclick="deleteTask('${task.id}')" class="p-1 rounded-lg text-rose-500 hover:bg-rose-500/10"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </div>
-                    <div class="grid grid-cols-3 gap-1 border-b border-slate-100 dark:border-slate-800/60 pb-1.5">
-                        <span class="text-xs font-bold text-slate-400 uppercase">Subject:</span>
-                        <span class="col-span-2 text-sm font-bold text-slate-900 dark:text-white break-words">${task.subject}</span>
+                    <div class="grid grid-cols-3 gap-1 border-b theme-border pb-1.5">
+                        <span class="text-xs font-bold theme-text-muted uppercase">Subject:</span>
+                        <span class="col-span-2 text-sm font-bold theme-text break-words">${task.subject}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-1 items-center">
-                        <span class="text-xs font-bold text-slate-400 uppercase">Priority:</span>
+                        <span class="text-xs font-bold theme-text-muted uppercase">Priority:</span>
                         <span class="col-span-2">${priorityBadge}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-1">
-                        <span class="text-xs font-bold text-slate-400 uppercase">Details:</span>
-                        <span class="col-span-2 text-xs text-slate-600 dark:text-slate-300 break-words">${task.details || '-'}</span>
+                        <span class="text-xs font-bold theme-text-muted uppercase">Details:</span>
+                        <span class="col-span-2 text-xs theme-text break-words">${task.details || '-'}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-1">
-                        <span class="text-xs font-bold text-slate-400 uppercase">Due Date:</span>
-                        <span class="col-span-2 text-xs font-semibold text-slate-500">${task.date}</span>
+                        <span class="text-xs font-bold theme-text-muted uppercase">Due Date:</span>
+                        <span class="col-span-2 text-xs font-semibold theme-text">${task.date}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-1 items-center pt-1">
-                        <span class="text-xs font-bold text-slate-400 uppercase">Status:</span>
+                        <span class="text-xs font-bold theme-text-muted uppercase">Status:</span>
                         <span class="col-span-2">
-                            <select onchange="updateTaskStatus('${task.id}', this.value)" class="text-xs font-bold rounded-xl px-2 py-1 bg-transparent border-0 cursor-pointer ${badgeColor}">
+                            <select onchange="updateTaskStatus('${task.id}', this.value)" class="text-xs font-bold rounded-xl px-2 py-1 bg-transparent border theme-border cursor-pointer ${badgeColor}">
                                 <option value="Pending" ${task.status === 'Pending' ? 'selected' : ''}>Pending</option>
                                 <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>Active</option>
                                 <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Done</option>
@@ -362,9 +455,9 @@
 
         function updateTaskStatus(id, newStatus) {
             tasks = tasks.map(t => t.id === id ? {...t, status: newStatus} : t);
+            sortTasks();
             saveAndRender();
         }
-
         function deleteTask(id) {
             tasks = tasks.filter(t => t.id !== id);
             saveAndRender();
@@ -379,6 +472,7 @@
 
             const ctx = document.getElementById('analyticsChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
+            
             chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -390,10 +484,15 @@
         }
 
         function addReminder() {
-            const val = document.getElementById('reminderInput').value.trim();
-            if(!val) return;
-            reminders.push({ id: Date.now().toString(), text: val });
+            const textVal = document.getElementById('reminderInput').value.trim();
+            const dateVal = document.getElementById('reminderDate').value;
+            if(!textVal || !dateVal) return;
+            
+            reminders.push({ id: Date.now().toString(), text: textVal, date: dateVal });
+            reminders.sort((a,b) => new Date(a.date) - new Date(b.date));
+            
             document.getElementById('reminderInput').value = '';
+            document.getElementById('reminderDate').value = '';
             saveAndRender();
         }
         function deleteReminder(id) {
@@ -404,18 +503,65 @@
             const list = document.getElementById('reminderList');
             list.innerHTML = '';
             if(reminders.length === 0) {
-                list.innerHTML = `<li class="text-slate-400 italic text-[11px] py-1">No items slated for school delivery.</li>`;
+                list.innerHTML = `<li class="theme-text-muted italic text-[11px] py-1">No items slated for school delivery.</li>`;
                 return;
             }
             reminders.forEach(r => {
                 const li = document.createElement('li');
-                li.className = "flex items-center justify-between py-1.5 gap-2";
-                li.innerHTML = `<span class="break-words max-w-[85%] font-medium text-amber-950 dark:text-amber-200">${r.text}</span><button onclick="deleteReminder('${r.id}')" class="text-rose-500 p-0.5 cursor-pointer"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i></button>`;
+                li.className = "flex items-center justify-between py-1.5 border-b theme-border gap-2";
+                li.innerHTML = `
+                    <div class="flex flex-col max-w-[85%]">
+                        <span class="break-words font-medium theme-text">${r.text}</span>
+                        <span class="text-[10px] font-bold text-amber-600">📅 Due: ${r.date}</span>
+                    </div>
+                    <button onclick="deleteReminder('${r.id}')" class="text-rose-500 p-0.5 cursor-pointer"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i></button>
+                `;
                 list.appendChild(li);
             });
         }
 
         function changeMonth(direction) { currentDate.setMonth(currentDate.getMonth() + direction); renderCalendar(); }
+        
+        document.getElementById('calendarEventForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const category = document.getElementById('eventCategory').value;
+
+            calendarEvents.push({ id: Date.now().toString(), title, date, category });
+            localStorage.setItem('calendar_events', JSON.stringify(calendarEvents));
+            document.getElementById('calendarEventForm').reset();
+            renderCalendar();
+            checkBirthdays();
+        });
+
+        function checkBirthdays() {
+            const alertBox = document.getElementById('annualAlertBox');
+            alertBox.innerHTML = '';
+            
+            const today = new Date();
+            const currentM = today.getMonth() + 1;
+            const currentD = today.getDate();
+
+            const todaysBirthdays = calendarEvents.filter(evt => {
+                if(evt.category !== 'birthday') return false;
+                const evDate = new Date(evt.date);
+                return (evDate.getMonth() + 1) === currentM && evDate.getDate() === currentD;
+            });
+
+            if(todaysBirthdays.length === 0) {
+                alertBox.innerHTML = `<div class="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl theme-text-muted italic">No annual birthdays logged for today.</div>`;
+                return;
+            }
+
+            todaysBirthdays.forEach(b => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-rose-500/10 text-rose-600 font-bold border border-rose-500/20 rounded-xl";
+                div.innerText = `🎂 Today's Celebration Reminder: Wish ${b.title}!`;
+                alertBox.appendChild(div);
+            });
+        }
+
         function renderCalendar() {
             const label = document.getElementById('calendarMonthYear');
             const grid = document.getElementById('calendarDays');
@@ -430,15 +576,32 @@
             for (let i = 0; i < start; i++) { grid.appendChild(document.createElement('span')); }
             for (let d = 1; d <= total; d++) {
                 const dStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                
                 const mTasks = tasks.filter(t => t.date === dStr);
+                const mEvents = calendarEvents.filter(e => {
+                    if (e.category === 'birthday') {
+                        const bD = new Date(e.date);
+                        return (bD.getMonth() === m && bD.getDate() === d);
+                    }
+                    return e.date === dStr;
+                });
+
+                const totalItemsOnDay = [...mTasks, ...mEvents];
+
                 const btn = document.createElement('button');
-                btn.className = "aspect-square flex flex-col items-center justify-between p-1 rounded-xl relative border border-slate-100 dark:border-slate-800/40 bg-slate-50 dark:bg-slate-800/30 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 w-full cursor-pointer";
-                btn.onclick = () => showDayTasks(dStr, mTasks);
-                btn.innerHTML = `<span class="text-[10px] sm:text-xs font-bold">${d}</span>`;
-                if(mTasks.length > 0) {
-                    const dots = document.createElement('div'); dots.className = "flex flex-wrap justify-center gap-0.5 max-w-full pb-0.5";
-                    mTasks.slice(0,3).forEach(t => {
-                        const dot = document.createElement('span'); dot.className = `w-1 h-1 rounded-full block ${t.status==='Pending'?'bg-amber-500':t.status==='In Progress'?'bg-blue-500':'bg-emerald-500'}`;
+                btn.className = "aspect-square flex flex-col items-center justify-between p-1.5 rounded-xl border theme-border theme-card hover:bg-indigo-50 dark:hover:bg-indigo-950/40 w-full cursor-pointer theme-text";
+                btn.onclick = () => showDayTasks(dStr, mTasks, mEvents);
+                btn.innerHTML = `<span class="font-bold">${d}</span>`;
+                
+                if(totalItemsOnDay.length > 0) {
+                    const dots = document.createElement('div'); dots.className = "flex justify-center gap-0.5 w-full overflow-hidden pb-0.5";
+                    
+                    if(mEvents.some(e => e.category === 'birthday')) {
+                        const bDot = document.createElement('span'); bDot.className = "w-1 h-1 rounded-full bg-rose-500 block";
+                        dots.appendChild(bDot);
+                    }
+                    mTasks.slice(0, 2).forEach(t => {
+                        const dot = document.createElement('span'); dot.className = `w-1 h-1 rounded-full block ${t.status==='Pending'?'bg-amber-500':'bg-blue-500'}`;
                         dots.appendChild(dot);
                     });
                     btn.appendChild(dots);
@@ -447,26 +610,35 @@
             }
         }
 
-        function showDayTasks(dateStr, dayTasks) {
+        function showDayTasks(dateStr, dayTasks, dayEvents) {
             const modal = document.getElementById('calendarModal');
             const list = document.getElementById('modalTasksList');
-            document.getElementById('modalDateHeader').innerText = `Tasks Due On ${dateStr}`;
+            document.getElementById('modalDateHeader').innerText = `Events On ${dateStr}`;
             list.innerHTML = '';
-            if(dayTasks.length === 0) list.innerHTML = `<p class="text-sm text-slate-400 italic py-4 text-center">No tasks assigned.</p>`;
-            else {
+            
+            if(dayTasks.length === 0 && dayEvents.length === 0) {
+                list.innerHTML = `<p class="text-sm theme-text-muted italic py-4 text-center">No assignments or annual birthday slots here.</p>`;
+            } else {
+                dayEvents.forEach(e => {
+                    const item = document.createElement('div');
+                    item.className = "p-3 bg-rose-500/10 border border-rose-500/20 text-rose-700 rounded-xl font-bold";
+                    item.innerText = e.category === 'birthday' ? `🎂 Annual Birthday: ${e.title}` : `📌 Event: ${e.title}`;
+                    list.appendChild(item);
+                });
                 dayTasks.forEach(t => {
                     const item = document.createElement('div');
-                    item.className = "p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800";
-                    item.innerHTML = `<div class="flex items-center justify-between gap-2 mb-1"><span class="font-bold text-sm">${t.subject}</span><span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-700">${t.priority===3?'High':t.priority===2?'Med':'Low'}</span></div><p class="text-xs text-slate-500">${t.details || '-'}</p>`;
+                    item.className = "p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border theme-border";
+                    item.innerHTML = `<div class="flex items-center justify-between mb-1"><span class="font-bold text-sm theme-text">${t.subject}</span><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 theme-text">${t.priority===3?'High':t.priority===2?'Med':'Low'}</span></div><p class="text-xs theme-text-muted">${t.details || '-'}</p>`;
                     list.appendChild(item);
                 });
             }
             modal.classList.remove('hidden'); lucide.createIcons();
         }
+        
         function closeModal() { document.getElementById('calendarModal').classList.add('hidden'); }
 
         function exportData() {
-            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, reminders }));
+            const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, reminders, calendarEvents }));
             const a = document.createElement('a'); a.setAttribute("href", str); a.setAttribute("download", `backlog_tracker_backup_${new Date().toISOString().slice(0,10)}.json`);
             document.body.appendChild(a); a.click(); a.remove();
         }
@@ -475,11 +647,11 @@
             const r = new FileReader(); r.onload = function(evt) {
                 try {
                     const parsed = JSON.parse(evt.target.result);
-                    if (parsed.tasks || parsed.reminders) {
-                        tasks = parsed.tasks || []; reminders = parsed.reminders || [];
+                    if (parsed.tasks || parsed.reminders || parsed.calendarEvents) {
+                        tasks = parsed.tasks || []; reminders = parsed.reminders || []; calendarEvents = parsed.calendarEvents || [];
                         sortTasks(); saveAndRender(); alert("Data imported successfully!");
                     }
-                } catch(err) { alert("Error parsing file."); }
+                } catch(err) { alert("Error parsing backup data."); }
             }; r.readAsText(file);
         }
 
