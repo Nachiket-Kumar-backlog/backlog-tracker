@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backlog Tracker & Dynamic Calendar</title>
     
-    <!-- WEBSITE ICON (FAVICON) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23ff3333%22/><text y=%2270%22 x=%2212%22 font-family=%22sans-serif%22 font-size=%2265%22 font-weight=%22bold%22 fill=%22%23ffffff%22>BT</text></svg>">
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
         :root {
@@ -62,9 +61,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 3px solid var(--accent-red);
             padding-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         header h1 {
@@ -74,15 +75,36 @@
             letter-spacing: 1px;
         }
 
+        .settings-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .settings-toolbar select {
+            width: auto;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .settings-toolbar button {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            text-transform: none;
+        }
+
         .theme-toggle-btn {
             background: transparent;
             border: 2px solid var(--accent-red);
             color: var(--accent-red);
-            padding: 8px 15px;
+            padding: 6px 12px !important;
             cursor: pointer;
-            border-radius: 20px;
+            border-radius: 4px;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -92,51 +114,162 @@
             color: #ffffff;
         }
 
-        #dynamic-top-alerts {
+        .alert-notification-zone {
             margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .birthday-banner {
+        .alert-item {
             background: #ffffff;
             color: #000000;
-            border: 4px solid var(--accent-red);
-            padding: 20px;
+            border: 2px solid var(--accent-red);
+            border-left: 8px solid var(--accent-red);
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            box-shadow: 0 2px 6px var(--shadow-color);
+        }
+        [data-theme="dark"] .alert-item {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .calendar-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .calendar-header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
             text-align: center;
-            box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
-        }
-        [data-theme="dark"] .birthday-banner {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-        .birthday-banner h2 {
-            color: var(--accent-red);
-            font-size: 1.8rem;
-            margin-bottom: 5px;
         }
 
-        .school-tomorrow-banner {
-            background: #ffffff;
-            color: #000000;
-            border: 4px solid var(--accent-red);
+        .weekday-label {
+            font-weight: bold;
+            background: var(--border-color);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+
+        .calendar-day-cell {
+            min-height: 70px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 5px;
+            cursor: pointer;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .calendar-day-cell:hover {
+            border-color: var(--accent-red);
+            background: rgba(255, 51, 51, 0.05);
+        }
+
+        .calendar-day-cell.empty-cell {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .dots-row {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 4px;
+            min-height: 10px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-birthday { background-color: #ff66cc; }   
+        .dot-reminder { background-color: #ff9900; }   
+        .dot-overdue { background-color: #ff3333; }    
+        .dot-active { background-color: #ffff00; }     
+        .dot-completed { background-color: #28a745; }  
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
             padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        [data-theme="dark"] .school-tomorrow-banner {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-        .school-tomorrow-banner h2 {
-            color: var(--accent-red);
-            font-size: 1.5rem;
-            margin-bottom: 10px;
         }
 
-        .urgent-highlight {
-            background-color: rgba(255, 51, 51, 0.15) !important;
-            border: 2px solid var(--accent-red) !important;
+        .modal-card {
+            background: var(--card-bg);
+            border: 3px solid var(--accent-red);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .modal-card h3 {
+            color: var(--accent-red);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-events-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-events-list li {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.05rem;
         }
 
         .grid-layout {
@@ -152,6 +285,7 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             box-shadow: 0 2px 8px var(--shadow-color);
+            margin-bottom: 25px;
         }
 
         .panel h2 {
@@ -159,6 +293,16 @@
             margin-bottom: 15px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 5px;
+        }
+
+        /* Editing highlight layout style override */
+        .panel.edit-flash-highlight {
+            animation: flashBorder 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes flashBorder {
+            from { border-color: var(--border-color); box-shadow: 0 2px 8px var(--shadow-color); }
+            to { border-color: var(--accent-red); box-shadow: 0 0 15px rgba(255, 51, 51, 0.4); }
         }
 
         .form-group {
@@ -216,19 +360,15 @@
             color: #ffffff;
         }
 
-        .settings-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-color);
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            margin-top: 10px;
+        /* Edit Pencil Action Styling Rules */
+        button.btn-edit {
+            background: #555555;
+            color: #ffffff;
+            margin-right: 5px;
         }
-        .settings-toggle select {
-            width: auto;
-            padding: 5px 10px;
+        button.btn-edit:hover {
+            background: #333333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .table-responsive {
@@ -287,45 +427,25 @@
             border-color: var(--accent-red);
         }
 
-        /* MOBILE RESPONSTRUCTING RULES FOR THE THREE TARGET TABLES */
+        .urgent-highlight {
+            background-color: rgba(255, 51, 51, 0.15) !important;
+            border: 2px solid var(--accent-red) !important;
+        }
+
         @media (max-width: 768px) {
             body { padding: 10px; }
             .container { padding: 15px; }
-            header { flex-direction: column; gap: 10px; text-align: center; }
+            header { flex-direction: column; align-items: stretch; text-align: center; }
+            .settings-toolbar { justify-content: center; }
 
-            /* Force tables to stop behaving like tables */
-            #backlog-table-box table, 
-            #backlog-table-box thead, 
-            #backlog-table-box tbody, 
-            #backlog-table-box th, 
-            #backlog-table-box tr, 
-            #backlog-table-box td,
-            #school-table-box table, 
-            #school-table-box thead, 
-            #school-table-box tbody, 
-            #school-table-box th, 
-            #school-table-box tr, 
-            #school-table-box td,
-            #calendar-table-box table, 
-            #calendar-table-box thead, 
-            #calendar-table-box tbody, 
-            #calendar-table-box th, 
-            #calendar-table-box tr, 
-            #calendar-table-box td { 
+            #backlog-table-box table, #backlog-table-box thead, #backlog-table-box tbody, #backlog-table-box th, #backlog-table-box tr, #backlog-table-box td,
+            #school-table-box table, #school-table-box thead, #school-table-box tbody, #school-table-box th, #school-table-box tr, #school-table-box td { 
                 display: block; 
             }
 
-            /* Hide table headers on mobile view completely */
-            #backlog-table-box thead,
-            #school-table-box thead,
-            #calendar-table-box thead {
-                display: none;
-            }
+            #backlog-table-box thead, #school-table-box thead { display: none; }
 
-            /* Turn rows into standalone visual cards */
-            #backlog-table-box tr,
-            #school-table-box tr,
-            #calendar-table-box tr {
+            #backlog-table-box tr, #school-table-box tr {
                 margin-bottom: 15px;
                 border: 1px solid var(--border-color);
                 border-radius: 6px;
@@ -333,10 +453,7 @@
                 background: var(--bg-color);
             }
 
-            /* Format cells to show label on left and data content on right */
-            #backlog-table-box td,
-            #school-table-box td,
-            #calendar-table-box td {
+            #backlog-table-box td, #school-table-box td {
                 border: none;
                 border-bottom: 1px dashed var(--border-color);
                 position: relative;
@@ -346,14 +463,8 @@
                 word-break: break-word;
             }
 
-            /* Remove bottom line for final row element inside card */
-            #backlog-table-box td:last-child,
-            #school-table-box td:last-child,
-            #calendar-table-box td:last-child {
-                border-bottom: none;
-            }
+            #backlog-table-box td:last-child, #school-table-box td:last-child { border-bottom: none; }
 
-            /* Inline Label Definitions via CSS generated pseudo selectors */
             #backlog-table-box td:nth-of-type(1)::before { content: "Subject:"; }
             #backlog-table-box td:nth-of-type(2)::before { content: "Priority:"; }
             #backlog-table-box td:nth-of-type(3)::before { content: "Details:"; }
@@ -365,121 +476,40 @@
             #school-table-box td:nth-of-type(2)::before { content: "Target Date:"; }
             #school-table-box td:nth-of-type(3)::before { content: "Action:"; }
 
-            #calendar-table-box td:nth-of-type(1)::before { content: "Schedule:"; }
-            #calendar-table-box td:nth-of-type(2)::before { content: "Date:"; }
-            #calendar-table-box td:nth-of-type(3)::before { content: "Action:"; }
-
-            /* Style structural properties for label text alignment rules */
-            #backlog-table-box td::before,
-            #school-table-box td::before,
-            #calendar-table-box td::before {
-                position: absolute;
-                top: 12px;
-                left: 12px;
-                width: 40%; 
-                padding-right: 10px; 
-                white-space: nowrap;
-                text-align: left;
-                font-weight: bold;
-                color: var(--text-color);
+            #backlog-table-box td::before, #school-table-box td::before {
+                position: absolute; top: 12px; left: 12px; width: 40%; text-align: left; font-weight: bold; color: var(--text-color);
             }
+
+            .calendar-day-cell { min-height: 55px; padding: 2px; }
+            .day-number { font-size: 0.85rem; }
+            .dot { width: 6px; height: 6px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="dynamic-top-alerts"></div>
-
+        
         <header>
             <div>
                 <h1>Backlog Tracker</h1>
                 <p style="color: var(--text-muted);">Manage Tasks, School Reminders &amp; Calendar Events</p>
             </div>
-            <button class="theme-toggle-btn" id="theme-switch-btn" onclick="toggleTheme()">🌓</button>
+            
+            <div class="settings-toolbar">
+                <select id="setting-auto-delete" onchange="changeAutoDeleteOption()">
+                    <option value="OFF">Auto Delete: OFF</option>
+                    <option value="ON">Auto Delete: ON</option>
+                </select>
+                <button type="button" onclick="exportData()" style="background:#555;">Export JSON</button>
+                <button type="button" onclick="importData()" class="btn-danger">Import JSON</button>
+                <button class="theme-toggle-btn" id="theme-switch-btn" onclick="toggleTheme()">🌓</button>
+            </div>
         </header>
 
-        <div class="grid-layout">
-            <!-- INPUT CONTROL PANEL 1 -->
-            <div class="panel">
-                <h2>Add New Backlog Task</h2>
-                <form id="backlog-form">
-                    <div class="form-group">
-                        <label for="task-subject">Subject / Topic</label>
-                        <input type="text" id="task-subject" required placeholder="e.g., Physics Chapter 4">
-                    </div>
-                    <div class="form-group">
-                        <label for="task-date">Target Due Date</label>
-                        <input type="date" id="task-date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="task-priority">Priority Level</label>
-                        <select id="task-priority">
-                            <option value="high">High Priority</option>
-                            <option value="medium" selected>Medium Priority</option>
-                            <option value="low">Low Priority</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="task-details">Task Details</label>
-                        <textarea id="task-details" rows="3" placeholder="Notes or instructions..."></textarea>
-                    </div>
-                    <button type="submit">Add Backlog Task</button>
-                </form>
-
-                <h2 style="margin-top: 30px;">School Item Reminder</h2>
-                <form id="school-form">
-                    <div class="form-group">
-                        <label for="school-item">Item / Document Needed</label>
-                        <input type="text" id="school-item" required placeholder="e.g., Lab Manual, Permission Slip">
-                    </div>
-                    <div class="form-group">
-                        <label for="school-date">Submission/Bring Date</label>
-                        <input type="date" id="school-date" required>
-                    </div>
-                    <button type="submit">Save Reminder</button>
-                </form>
-            </div>
-
-            <!-- INPUT CONTROL PANEL 2 -->
-            <div class="panel">
-                <h2>Add Calendar Event</h2>
-                <form id="calendar-form">
-                    <div class="form-group">
-                        <label for="event-name">Event / Name</label>
-                        <input type="text" id="event-name" required placeholder="e.g., Dad's Birthday">
-                    </div>
-                    <div class="form-group">
-                        <label for="event-date">Event Date</label>
-                        <input type="date" id="event-date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="event-type">Category Type</label>
-                        <select id="event-type">
-                            <option value="regular" selected>One-Time Task</option>
-                            <option value="birthday">Birthday (Annually)</option>
-                        </select>
-                    </div>
-                    <button type="submit">Add Event</button>
-                </form>
-
-                <h2 style="margin-top: 30px;">Settings &amp; Backup</h2>
-                <div class="settings-toggle">
-                    <span style="font-weight: bold;">Auto Delete Completed Tasks</span>
-                    <select id="setting-auto-delete" onchange="changeAutoDeleteOption()">
-                        <option value="OFF">OFF</option>
-                        <option value="ON">ON</option>
-                    </select>
-                </div>
-                <div style="margin-top: 15px; display: flex; gap: 10px;">
-                    <button type="button" onclick="exportData()" style="background:#555;">Export JSON</button>
-                    <button type="button" onclick="importData()" class="btn-danger">Import JSON</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ACTIVE TASKS LIST WORKSPACE -->
-        <div class="panel" style="margin-bottom: 25px;">
+        <div class="alert-notification-zone" id="top-notification-zone"></div>
+        
+        <div class="panel">
             <h2>Your Active Backlogs</h2>
             <div class="tabs">
                 <button type="button" class="tab-btn active" id="tab-all" onclick="switchTab('all')">All</button>
@@ -504,40 +534,111 @@
             </div>
         </div>
 
-        <div class="grid-layout">
-            <div class="panel">
-                <h2>School Items List</h2>
-                <div class="table-responsive" id="school-table-box">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item Required</th>
-                                <th>Target Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="school-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2>Calendar Log Matrix</h2>
-                <div class="table-responsive" id="calendar-table-box">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Event Details</th>
-                                <th>Date Schedule</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="calendar-table-body"></tbody>
-                    </table>
-                </div>
+        <div class="panel">
+            <h2>School Items List</h2>
+            <div class="table-responsive" id="school-table-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Required</th>
+                            <th>Target Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="school-table-body"></tbody>
+                </table>
             </div>
         </div>
 
+        <div class="panel">
+            <h2>Calendar Dashboard Matrix</h2>
+            <div class="calendar-wrapper">
+                <div class="calendar-header-nav">
+                    <button type="button" onclick="shiftMonth(-1)">◀ Prev</button>
+                    <h3 id="calendar-month-year" style="color:var(--text-color); margin:0;"></h3>
+                    <button type="button" onclick="shiftMonth(1)">Next ▶</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid-mount"></div>
+            </div>
+        </div>
+
+        <div class="grid-layout">
+            <div class="panel" id="backlog-form-panel">
+                <h2 id="backlog-form-title">Add New Backlog Task</h2>
+                <form id="backlog-form">
+                    <input type="hidden" id="edit-backlog-id" value="">
+                    
+                    <div class="form-group">
+                        <label for="task-subject">Subject / Topic</label>
+                        <input type="text" id="task-subject" required placeholder="e.g., Physics Chapter 4">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-date">Target Due Date</label>
+                        <input type="date" id="task-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority">Priority Level</label>
+                        <select id="task-priority">
+                            <option value="high">High Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-details">Task Details</label>
+                        <textarea id="task-details" rows="3" placeholder="Notes or instructions..."></textarea>
+                    </div>
+                    <button type="submit" id="backlog-submit-btn">Add Backlog Task</button>
+                    <button type="button" id="backlog-cancel-btn" style="background:#555; margin-left:5px; display:none;" onclick="cancelBacklogEdit()">Cancel</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h2>School Item Reminder</h2>
+                <form id="school-form">
+                    <div class="form-group">
+                        <label for="school-item">Item / Document Needed</label>
+                        <input type="text" id="school-item" required placeholder="e.g., Lab Manual, Permission Slip">
+                    </div>
+                    <div class="form-group">
+                        <label for="school-date">Submission/Bring Date</label>
+                        <input type="date" id="school-date" required>
+                    </div>
+                    <button type="submit">Save Reminder</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h2>Add Calendar Event</h2>
+                <form id="calendar-form">
+                    <div class="form-group">
+                        <label for="event-name">Event / Name</label>
+                        <input type="text" id="event-name" required placeholder="e.g., Rahul's Birthday">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-date">Event Date</label>
+                        <input type="date" id="event-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-type">Category Type</label>
+                        <select id="event-type">
+                            <option value="regular" selected>One-Time Task</option>
+                            <option value="birthday">Birthday (Annually)</option>
+                        </select>
+                    </div>
+                    <button type="submit">Add Event</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="date-details-modal" onclick="closeModalWindow(event)">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="hideModal()">×</button>
+            <h3 id="modal-target-date-label">Date Schedule Details</h3>
+            <ul class="modal-events-list" id="modal-events-list-items"></ul>
+        </div>
     </div>
 
     <script>
@@ -545,6 +646,7 @@
         let schoolReminders = JSON.parse(localStorage.getItem('schoolReminders')) || [];
         let calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || [];
         let currentTab = 'all';
+        let currentCalendarDate = new Date();
 
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
@@ -553,10 +655,10 @@
             const savedAutoDelete = localStorage.getItem('autoDeleteCompleted') || 'OFF';
             document.getElementById('setting-auto-delete').value = savedAutoDelete;
             
-            renderTopAlerts();
+            renderNotifications();
             renderBacklogs();
             renderSchoolReminders();
-            renderCalendarEvents();
+            renderCalendar();
         });
 
         function toggleTheme() {
@@ -583,6 +685,7 @@
                 backlogs = backlogs.filter(b => b.status !== 'done');
                 saveToStorage();
                 renderBacklogs();
+                renderCalendar();
             }
         }
 
@@ -592,9 +695,9 @@
             localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
         }
 
-        function renderTopAlerts() {
-            const alertBox = document.getElementById('dynamic-top-alerts');
-            alertBox.innerHTML = '';
+        function renderNotifications() {
+            const container = document.getElementById('top-notification-zone');
+            container.innerHTML = '';
 
             const today = new Date();
             const tomorrow = new Date();
@@ -605,39 +708,269 @@
 
             calendarEvents.forEach(ev => {
                 if (ev.type === 'birthday') {
-                    const evDate = new Date(ev.date);
-                    if (evDate.getDate() === today.getDate() && evDate.getMonth() === today.getMonth()) {
-                        const card = document.createElement('div');
-                        card.className = 'birthday-banner';
-                        card.innerHTML = `<h2>🎉 Happy Birthday</h2><p style="font-size: 1.4rem; font-weight: bold; margin: 5px 0;">${ev.name}</p><p style="color: var(--text-muted);">${ev.date}</p>`;
-                        alertBox.appendChild(card);
+                    const bday = new Date(ev.date);
+                    if (bday.getDate() === today.getDate() && bday.getMonth() === today.getMonth()) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert-item';
+                        alertDiv.innerHTML = `🎂 Today is <strong>${ev.name}</strong>.`;
+                        container.appendChild(alertDiv);
                     }
                 }
             });
 
-            const tomorrowItems = schoolReminders.filter(item => item.date === tomorrowStr);
-            if (tomorrowItems.length > 0) {
-                const schoolCard = document.createElement('div');
-                schoolCard.className = 'school-tomorrow-banner';
-                let listItems = tomorrowItems.map(i => `<li><strong>${i.item}</strong></li>`).join('');
-                schoolCard.innerHTML = `<h2>📚 Tomorrow's School Reminder</h2><ul style="padding-left: 20px; text-align: left; margin-top: 10px;">${listItems}</ul>`;
-                alertBox.appendChild(schoolCard);
+            schoolReminders.forEach(sr => {
+                if (sr.date === tomorrowStr) {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert-item';
+                    alertDiv.innerHTML = `📢 Tomorrow you have to bring your <strong>${sr.item}</strong>.`;
+                    container.appendChild(alertDiv);
+                }
+            });
+
+            const todayMidnight = new Date();
+            todayMidnight.setHours(0,0,0,0);
+
+            backlogs.forEach(b => {
+                if (b.status !== 'done') {
+                    const dueDate = new Date(b.date);
+                    dueDate.setHours(0,0,0,0);
+                    if (dueDate < todayMidnight) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert-item';
+                        alertDiv.innerHTML = `⏰ <strong>${b.subject}</strong> is overdue.`;
+                        container.appendChild(alertDiv);
+                    }
+                }
+            });
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid-mount');
+            const title = document.getElementById('calendar-month-year');
+            grid.innerHTML = '';
+
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            title.innerText = `${monthNames[month]} ${year}`;
+
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            daysOfWeek.forEach(d => {
+                const lbl = document.createElement('div');
+                lbl.className = 'weekday-label';
+                lbl.innerText = d;
+                grid.appendChild(lbl);
+            });
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalMonthDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'calendar-day-cell empty-cell';
+                grid.appendChild(emptyCell);
             }
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            for (let day = 1; day <= totalMonthDays; day++) {
+                const cellDate = new Date(year, month, day);
+                const cellDateStr = getLocalDateString(cellDate);
+
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell';
+                cell.setAttribute('data-date', cellDateStr);
+                cell.onclick = () => openDateDetails(cellDateStr);
+
+                const numSpan = document.createElement('div');
+                numSpan.className = 'day-number';
+                numSpan.innerText = day;
+                cell.appendChild(numSpan);
+
+                const dotsRow = document.createElement('div');
+                dotsRow.className = 'dots-row';
+
+                let hasBirthday = false;
+                let hasReminder = false;
+                let hasOverdue = false;
+                let hasActive = false;
+                let hasCompleted = false;
+
+                calendarEvents.forEach(ev => {
+                    if (ev.type === 'birthday') {
+                        const bDate = new Date(ev.date);
+                        if (bDate.getDate() === day && bDate.getMonth() === month) {
+                            hasBirthday = true;
+                        }
+                    } else if (ev.date === cellDateStr) {
+                        hasReminder = true;
+                    }
+                });
+
+                schoolReminders.forEach(sr => {
+                    if (sr.date === cellDateStr) hasReminder = true;
+                });
+
+                backlogs.forEach(b => {
+                    if (b.date === cellDateStr) {
+                        if (b.status === 'done') hasCompleted = true;
+                        else if (b.status === 'active' || b.status === 'pending') {
+                            const bDue = new Date(b.date);
+                            bDue.setHours(0,0,0,0);
+                            if (bDue < today) hasOverdue = true;
+                            else hasActive = true;
+                        }
+                    }
+                });
+
+                if (hasBirthday) dotsRow.innerHTML += `<span class="dot dot-birthday" title="Birthday"></span>`;
+                if (hasReminder) dotsRow.innerHTML += `<span class="dot dot-reminder" title="Reminder"></span>`;
+                if (hasOverdue) dotsRow.innerHTML += `<span class="dot dot-overdue" title="Overdue Backlog"></span>`;
+                if (hasActive) dotsRow.innerHTML += `<span class="dot dot-active" title="Active Backlog"></span>`;
+                if (hasCompleted) dotsRow.innerHTML += `<span class="dot dot-completed" title="Completed"></span>`;
+
+                cell.appendChild(dotsRow);
+                grid.appendChild(cell);
+            }
+        }
+
+        function shiftMonth(direction) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function openDateDetails(dateStr) {
+            const modal = document.getElementById('date-details-modal');
+            const label = document.getElementById('modal-target-date-label');
+            const list = document.getElementById('modal-events-list-items');
+            
+            label.innerText = `Schedules for ${dateStr}`;
+            list.innerHTML = '';
+
+            let itemsCount = 0;
+            const clickDate = new Date(dateStr);
+
+            calendarEvents.forEach(ev => {
+                if (ev.type === 'birthday') {
+                    const bDate = new Date(ev.date);
+                    if (bDate.getDate() === clickDate.getDate() && bDate.getMonth() === clickDate.getMonth()) {
+                        const li = document.createElement('li');
+                        li.innerHTML = `🩷 <strong>[Birthday]</strong> ${ev.name}`;
+                        list.appendChild(li);
+                        itemsCount++;
+                    }
+                } else if (ev.date === dateStr) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `📌 <strong>[Event]</strong> ${ev.name}`;
+                    list.appendChild(li);
+                    itemsCount++;
+                }
+            });
+
+            schoolReminders.forEach(sr => {
+                if (sr.date === dateStr) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `🟠 <strong>[School Reminder]</strong> ${sr.item}`;
+                    list.appendChild(li);
+                    itemsCount++;
+                }
+            });
+
+            backlogs.forEach(b => {
+                if (b.date === dateStr) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `🎯 <strong>[Backlog]</strong> ${b.subject} (${b.status})`;
+                    list.appendChild(li);
+                    itemsCount++;
+                }
+            });
+
+            if (itemsCount === 0) {
+                list.innerHTML = `<li style="color:var(--text-muted); text-align:center;">No scheduled entries listed for this date.</li>`;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function hideModal() {
+            document.getElementById('date-details-modal').style.display = 'none';
+        }
+
+        function closeModalWindow(e) {
+            if (e.target.id === 'date-details-modal') hideModal();
+        }
+
+        // REDIRECT & LIVE INLINE RE-EDIT ENGINE ROUTER
+        function initBacklogEdit(id) {
+            const target = backlogs.find(b => b.id === id);
+            if (!target) return;
+
+            // Load values to fields
+            document.getElementById('edit-backlog-id').value = target.id;
+            document.getElementById('task-subject').value = target.subject;
+            document.getElementById('task-date').value = target.date;
+            document.getElementById('task-priority').value = target.priority;
+            document.getElementById('task-details').value = target.details || '';
+
+            // Update Titles & Buttons
+            document.getElementById('backlog-form-title').innerText = "✏️ Edit Backlog Task";
+            document.getElementById('backlog-submit-btn').innerText = "Update Backlog Task";
+            document.getElementById('backlog-cancel-btn').style.display = "inline-block";
+
+            // Scroll down to Backlog Form area smoothly
+            const panel = document.getElementById('backlog-form-panel');
+            panel.scrollIntoView({ behavior: 'smooth' });
+            
+            // Apply attention flash border effect
+            panel.classList.add('edit-flash-highlight');
+            setTimeout(() => {
+                panel.classList.remove('edit-flash-highlight');
+            }, 3000);
+        }
+
+        function cancelBacklogEdit() {
+            document.getElementById('edit-backlog-id').value = "";
+            document.getElementById('backlog-form').reset();
+            document.getElementById('backlog-form-title').innerText = "Add New Backlog Task";
+            document.getElementById('backlog-submit-btn').innerText = "Add Backlog Task";
+            document.getElementById('backlog-cancel-btn').style.display = "none";
         }
 
         document.getElementById('backlog-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const newItem = {
-                id: Date.now(),
-                subject: document.getElementById('task-subject').value,
-                date: document.getElementById('task-date').value,
-                priority: document.getElementById('task-priority').value,
-                details: document.getElementById('task-details').value,
-                status: 'pending'
-            };
-            backlogs.push(newItem);
+            const editId = document.getElementById('edit-backlog-id').value;
+
+            if (editId) {
+                // Perform Update Mode
+                backlogs = backlogs.map(b => {
+                    if (b.id == editId) {
+                        b.subject = document.getElementById('task-subject').value;
+                        b.date = document.getElementById('task-date').value;
+                        b.priority = document.getElementById('task-priority').value;
+                        b.details = document.getElementById('task-details').value;
+                    }
+                    return b;
+                });
+                cancelBacklogEdit();
+            } else {
+                // Perform Traditional Creation Mode
+                const newItem = {
+                    id: Date.now(),
+                    subject: document.getElementById('task-subject').value,
+                    date: document.getElementById('task-date').value,
+                    priority: document.getElementById('task-priority').value,
+                    details: document.getElementById('task-details').value,
+                    status: 'pending'
+                };
+                backlogs.push(newItem);
+            }
+
             saveToStorage();
             renderBacklogs();
+            renderNotifications();
+            renderCalendar();
             document.getElementById('backlog-form').reset();
         });
 
@@ -651,7 +984,8 @@
             schoolReminders.push(newItem);
             saveToStorage();
             renderSchoolReminders();
-            renderTopAlerts();
+            renderNotifications();
+            renderCalendar();
             document.getElementById('school-form').reset();
         });
 
@@ -665,8 +999,8 @@
             };
             calendarEvents.push(newItem);
             saveToStorage();
-            renderCalendarEvents();
-            renderTopAlerts();
+            renderNotifications();
+            renderCalendar();
             document.getElementById('calendar-form').reset();
         });
 
@@ -684,7 +1018,7 @@
             const filtered = currentTab === 'all' ? backlogs : backlogs.filter(b => b.status === currentTab);
             
             if(filtered.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Empty directory section log template.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">No backlogs captured inside this tab view directory.</td></tr>`;
                 return;
             }
 
@@ -697,6 +1031,7 @@
                     <td>${b.date}</td>
                     <td style="text-transform: capitalize; font-weight: bold;">${b.status}</td>
                     <td>
+                        <button onclick="initBacklogEdit(${b.id})" class="btn-edit" style="padding:4px 8px; font-size:0.8rem;" title="Edit Task">✏️</button>
                         ${b.status !== 'done' ? `<button onclick="updateStatus(${b.id}, 'done')" style="padding:4px 8px; font-size:0.8rem; margin-right:5px; background:#28a745;">✓ Complete</button>` : ''}
                         ${b.status === 'pending' ? `<button onclick="updateStatus(${b.id}, 'active')" style="padding:4px 8px; font-size:0.8rem; margin-right:5px; background:var(--primary-cyan); color:black;">⚡ Activate</button>` : ''}
                         <button onclick="deleteBacklog(${b.id})" class="btn-danger" style="padding:4px 8px; font-size:0.8rem;">Delete</button>
@@ -720,12 +1055,16 @@
 
             saveToStorage();
             renderBacklogs();
+            renderNotifications();
+            renderCalendar();
         }
 
         function deleteBacklog(id) {
             backlogs = backlogs.filter(b => b.id !== id);
             saveToStorage();
             renderBacklogs();
+            renderNotifications();
+            renderCalendar();
         }
 
         function renderSchoolReminders() {
@@ -768,34 +1107,8 @@
             schoolReminders = schoolReminders.filter(s => s.id !== id);
             saveToStorage();
             renderSchoolReminders();
-            renderTopAlerts();
-        }
-
-        function renderCalendarEvents() {
-            const body = document.getElementById('calendar-table-body');
-            body.innerHTML = '';
-
-            if(calendarEvents.length === 0) {
-                body.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted)">No active log timeline dates captured.</td></tr>`;
-                return;
-            }
-
-            calendarEvents.forEach(c => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${c.type === 'birthday' ? '🎂' : '📌'} <strong>${c.name}</strong></td>
-                    <td>${c.date}</td>
-                    <td><button onclick="deleteCalendar(${c.id})" class="btn-danger" style="padding:4px 8px; font-size:0.8rem;">Remove</button></td>
-                `;
-                body.appendChild(tr);
-            });
-        }
-
-        function deleteCalendar(id) {
-            calendarEvents = calendarEvents.filter(c => c.id !== id);
-            saveToStorage();
-            renderCalendarEvents();
-            renderTopAlerts();
+            renderNotifications();
+            renderCalendar();
         }
 
         function exportData() {
